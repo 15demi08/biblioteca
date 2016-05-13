@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package biblioteca.repositorios;
 
 import biblioteca.modelos.Livro;
@@ -14,7 +8,7 @@ import biblioteca.modelos.Livro;
  */
 public class RepositorioLivros extends Repositorio<Livro> {
     
-    private static Repositorio<Livro> instancia;
+    private static Repositorio<Livro> instancia = new Repositorio<>();
 
     public static Repositorio<Livro> getInstancia() {
         return instancia;

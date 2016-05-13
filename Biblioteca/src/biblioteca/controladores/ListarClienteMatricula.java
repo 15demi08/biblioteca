@@ -31,7 +31,12 @@ public class ListarClienteMatricula {
         
     }
     
-    private static Cliente pesquisaClientePorMatricula( String matricula ){
+    /**
+     * Retorna o cliente com base na matricula fornecida
+     * @param matricula
+     * @return
+     */
+    public static Cliente pesquisaClientePorMatricula( String matricula ){
         
         Repositorio<Cliente> repClientes = RepositorioClientes.getInstancia();
         

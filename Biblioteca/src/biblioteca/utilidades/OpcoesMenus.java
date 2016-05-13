@@ -42,7 +42,7 @@ public class OpcoesMenus {
     public static final int REL_OP_CLIENTE_ULT_RETIR = 3;
     public static final int REL_OP_ULT_RETIR = 4;
     public static final int REL_OP_ULT_DEV = 5;
-    public static final int REL_OP_VOLTAR = 5;
+    public static final int REL_OP_VOLTAR = 6;
     
     
 }

@@ -12,6 +12,9 @@ package biblioteca.modelos;
 public class Livro {
 
     private static int proximoCodigo = 1;
+    
+    public static final boolean STATUS_DISPONIVEL = true;
+    public static final boolean STATUS_INDISPONIVEL = false;
 
     private String ISBN, nome, autores, editora;
     private int codigo, anoPublicacao;
@@ -23,7 +26,7 @@ public class Livro {
         this.autores = autores;
         this.editora = editora;
         this.anoPublicacao = anoPublicacao;
-        this.disponivel = true;
+        this.disponivel = STATUS_DISPONIVEL;
         codigo = proximoCodigo;
         proximoCodigo++;
     }

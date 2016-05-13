@@ -1,9 +1,9 @@
 package biblioteca;
 
-import biblioteca.Telas.TelaMovimentacoes;
-import biblioteca.Telas.TelaLivros;
-import biblioteca.Telas.TelaClientes;
-import biblioteca.Telas.TelaRelatorios;
+import biblioteca.telas.TelaMovimentacoes;
+import biblioteca.telas.TelaLivros;
+import biblioteca.telas.TelaClientes;
+import biblioteca.telas.TelaRelatorios;
 import biblioteca.modelos.Cliente;
 import biblioteca.modelos.Livro;
 import biblioteca.modelos.Movimentacao;
@@ -15,8 +15,8 @@ import biblioteca.utilidades.Console;
 import biblioteca.utilidades.OpcoesMenus;
 
 /**
- *
- * @author 631510058
+ * Classe principal do Sistema
+ * @author Demétrius Jr.
  */
 public class Biblioteca {
 
@@ -39,9 +39,9 @@ public class Biblioteca {
         repLivros.adicionar(new Livro("2345678912301", "O Pequeno Prícipe", "Antoine de Saint-Exupéry", "Abril", 1943));
         repLivros.adicionar(new Livro("3456789123012", "Assassin's Creed: Renascença", "Oliver Bowden", "Teste", 2011));
 
-        Console.println("--:::::::::::::::::::::::::::::::::::::");
-        Console.println("-- Bem vindo ao Sistema de Biblioteca!");
-        Console.println("--:::::::::::::::::::::::::::::::::::::");
+        Console.println("--============--");
+        Console.println("-- Biblioteca --");
+        Console.println("--============--");
 
         boolean sair = false;
 
@@ -88,13 +88,16 @@ public class Biblioteca {
     private static void menuPrincipal() {
 
         String msg;
-
-        msg = "-- Selecione uma opção:\n"
-                + "-- 1: Clientes\n"
-                + "-- 2: Livros\n"
-                + "-- 3: Movimentações\n"
-                + "-- 4: Relatórios\n"
-                + "-- 5: Sair";
+        
+        msg = "--::::::::::::::::\n"
+            + "-- Menu Principal\n"
+            + "--::::::::::::::::\n"
+            + "-- Selecione uma opção:\n"
+            + "-- 1: Clientes\n"
+            + "-- 2: Livros\n"
+            + "-- 3: Movimentações\n"
+            + "-- 4: Relatórios\n"
+            + "-- 5: Sair";
 
         Console.println(msg);
     }

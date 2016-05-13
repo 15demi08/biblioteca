@@ -31,28 +31,51 @@ public class Movimentacao {
         proximoCodigo++;
     }
 
+    public int getCodigo() {
+        return codigo;
+    }
+    
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public ArrayList<Livro> getLivros() {
+        return livros;
+    }
+    
+    public boolean verificarTodosDevolvidos(){
+        
+        for( Livro l : livros ){
+            if( !l.isDisponivel() ){
+                return false;
+            }
+        }
+        
+        dataDevolucao = LocalDate.now();
+        return true;
+    }
+
     @Override
     public String toString() {
         
         String retirada, devEstimada, dev;
         
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/uuu");
-        
-        retirada = dataRetirada.format(dtf);
-        devEstimada = dataEstimadaDevolucao.format(dtf);
-        dev = dataDevolucao.format(dtf);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/uuuu");
         
         String msg;
-        msg = "-- Retirada: " + retirada +"\n"
-            + "-- Devolucao: " + ( dataDevolucao == null ? "Prevista p/ " + devEstimada : dev )
+        String devTexto = ( dataDevolucao == null
+                            ? "Prevista p/ " + dataEstimadaDevolucao.format(dtf)
+                            : dataDevolucao.format(dtf) );
+        
+        msg = "-- Código : " + codigo + "\n"
+            + "-------------------\n"
             + "-- Cliente: " + cliente.getMatricula() + " - " + cliente.getNome() + "\n"
+            + "-- Retirada: " + dataRetirada.format(dtf) +"\n"
+            + "-- Devolucao: " + devTexto + "\n"
             + "-- Livros\n";
         
-        for( Livro l : livros ){
-            
+        for( Livro l : livros )            
             msg += "---- " + l.getCodigo() + ": " + l.getNome() + "\n";
-            
-        }
         
         return msg;
     }
