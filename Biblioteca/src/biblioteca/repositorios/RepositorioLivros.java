@@ -6,7 +6,7 @@ import biblioteca.modelos.Livro;
  *
  * @author 631510058
  */
-public class RepositorioLivros extends Repositorio<Livro> {
+public class RepositorioLivros {
     
     private static Repositorio<Livro> instancia = new Repositorio<>();
 

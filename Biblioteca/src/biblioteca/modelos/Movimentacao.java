@@ -2,6 +2,7 @@ package biblioteca.modelos;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 /**
@@ -12,7 +13,7 @@ public class Movimentacao {
     
     private static int proximoCodigo = 1;
     
-    private int codigo;
+    private int codigo, diasAtraso = 0;
     private Cliente cliente;
     private ArrayList<Livro> livros;
     private LocalDate dataRetirada, dataEstimadaDevolucao, dataDevolucao = null;
@@ -63,16 +64,23 @@ public class Movimentacao {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/uuuu");
         
         String msg;
-        String devTexto = ( dataDevolucao == null
-                            ? "Prevista p/ " + dataEstimadaDevolucao.format(dtf)
-                            : dataDevolucao.format(dtf) );
         
         msg = "-- Código : " + codigo + "\n"
             + "-------------------\n"
             + "-- Cliente: " + cliente.getMatricula() + " - " + cliente.getNome() + "\n"
-            + "-- Retirada: " + dataRetirada.format(dtf) +"\n"
-            + "-- Devolucao: " + devTexto + "\n"
-            + "-- Livros\n";
+            + "-- Retirada: " + dataRetirada.format(dtf) + "\n"
+            + "-- Devolução Prevista: " + dataEstimadaDevolucao.format(dtf) + "\n"
+            + "-- Devolucao: " + ( dataDevolucao == null ? "Pendente" : dataDevolucao.format(dtf) ) + "\n"
+            + "-- Atraso: ";
+        
+        if( dataDevolucao == null )
+            msg += "-\n";
+        else if( dataDevolucao != null && dataDevolucao.isAfter(dataEstimadaDevolucao) )    
+            msg += dataEstimadaDevolucao.until(dataDevolucao, ChronoUnit.DAYS) + " dia(s)\n";
+        else
+            msg += "Devolvido(s) na data estimada ou antes\n";
+        
+        msg += "-- Livros\n";
         
         for( Livro l : livros )            
             msg += "---- " + l.getCodigo() + ": " + l.getNome() + "\n";

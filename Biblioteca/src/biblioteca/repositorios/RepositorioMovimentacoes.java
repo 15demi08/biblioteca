@@ -6,7 +6,7 @@ import biblioteca.modelos.Movimentacao;
  *
  * @author 631510058
  */
-public class RepositorioMovimentacoes extends Repositorio<Movimentacao> {
+public class RepositorioMovimentacoes {
     
     private static Repositorio<Movimentacao> instancia = new Repositorio<>();
 

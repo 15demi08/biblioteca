@@ -124,7 +124,7 @@ public class DevolverLivro {
         do {
             
             try {
-                codMov = Integer.parseInt(Console.readString("-- Código: "));
+                codMov = Integer.parseInt(Console.readString("-- Código da Movimentação: "));
                 for( int i = 0; i < repMovs.numItens(); i++ ){
 
                     Movimentacao m = repMovs.retornar(i);
