@@ -28,7 +28,7 @@ public interface ClienteDAO extends DAO<Cliente> {
     public boolean deletar(int id);
 
     @Override
-    public boolean inserir(Cliente obj);
+    public int inserir(Cliente obj);
 
     @Override
     public Cliente obter(int id);

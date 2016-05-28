@@ -15,7 +15,7 @@ public interface DAO<T> {
     
     T obter( int id );
     
-    boolean inserir( T obj );
+    int inserir( T obj );
     
     boolean deletar( int id );
     

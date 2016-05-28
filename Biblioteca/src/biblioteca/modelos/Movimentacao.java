@@ -67,7 +67,7 @@ public class Movimentacao {
         
         msg = "-- Código : " + codigo + "\n"
             + "-------------------\n"
-            + "-- Cliente: " + cliente.getMatricula() + " - " + cliente.getNome() + "\n"
+            + "-- Cliente: " + cliente.getId() + " - " + cliente.getNome() + "\n"
             + "-- Retirada: " + dataRetirada.format(dtf) + "\n"
             + "-- Devolução Prevista: " + dataEstimadaDevolucao.format(dtf) + "\n"
             + "-- Devolucao: " + ( dataDevolucao == null ? "Pendente" : dataDevolucao.format(dtf) ) + "\n"

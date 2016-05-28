@@ -1,8 +1,5 @@
 package biblioteca.telas;
 
-import biblioteca.controladores.CadastrarCliente;
-import biblioteca.controladores.ListarClienteMatricula;
-import biblioteca.repositorios.RepositorioClientes;
 import biblioteca.utilidades.Console;
 import biblioteca.utilidades.OpcoesMenus;
 
@@ -27,14 +24,13 @@ public class TelaClientes {
                 switch (opcao) {
 
                     case OpcoesMenus.CLIENTE_OP_CADASTRAR:
-                        CadastrarCliente.executar();
+                        cadastrarCliente();
                         break;
                     case OpcoesMenus.CLIENTE_OP_LISTAR:
-                        Console.println("-- Listando Itens do Repositório de Clientes");
-                        RepositorioClientes.getInstancia().listarItens();
+                        listarClientes();
                         break;
                     case OpcoesMenus.CLIENTE_OP_LISTAR_POR_MATRICULA:
-                        ListarClienteMatricula.executar();
+                        consultarCliente();
                         break;
                     case OpcoesMenus.CLIENTE_OP_VOLTAR:
                         sair = true;
@@ -58,6 +54,9 @@ public class TelaClientes {
 
     private static void menu() {
 
+        // Nota: Atualizar menu e métodos correspondentes para as opções
+        // de atualizar e excluir (desativar) um cliente
+        
         String msg;
         
         msg = "--::::::::::\n"
@@ -69,6 +68,22 @@ public class TelaClientes {
             + "-- 4: Voltar";
 
         Console.println(msg);
+    }
+
+    private static void cadastrarCliente() {
+        Console.println("-- Usuario digita dados.\n"
+                      + "-- Este método cria um objeto Cliente com os dados digitados\n"
+                      + "-- e chama ClienteDAODB.inserir() passando o objeto");
+    }
+
+    private static void listarClientes() {
+        Console.println("-- Este método chama ClienteDAODB.listarTodosClientes()\n"
+                      + "-- e itera pelo ArrayList de resultado, imprimindo na tela os seus itens\n");
+    }
+
+    private static void consultarCliente() {
+        Console.println("-- Pede que o usuário digite um id e\n"
+                      + "-- e chama ClienteDAODB.obter() passando o id digitado");
     }
 
 }
