@@ -11,31 +11,42 @@ package biblioteca.modelos;
  */
 public class Livro {
 
-    private static int proximoCodigo = 1;
-    
-    public static final boolean STATUS_DISPONIVEL = true;
-    public static final boolean STATUS_INDISPONIVEL = false;
-
     private String ISBN, nome, autores, editora;
-    private int codigo, anoPublicacao;
-    private boolean disponivel;
+    private int id = null, anoPublicacao;
+    private boolean disponivel = null;
 
-    public Livro(String ISBN, String nome, String autores, String editora, int anoPublicacao) {
+	/**
+	 * Cria um novo livro com os dados especificados
+	 */
+    public Livro(int id, String ISBN, String nome, String autores, String editora, int anoPublicacao, boolean disponivel) {
+		
+        this.id = id;
+		this.disponivel = disponivel;
+		Livro(ISBN, nome, autores, editora, anoPublicacao);
+		
+    }
+	
+	/**
+	 * Cria um livro sem id, para inserção no banco
+	 */
+	public Livro(String ISBN, String nome, String autores, String editora, int anoPublicacao) {
+		
         this.ISBN = ISBN;
         this.nome = nome;
         this.autores = autores;
         this.editora = editora;
         this.anoPublicacao = anoPublicacao;
-        this.disponivel = STATUS_DISPONIVEL;
-        codigo = proximoCodigo;
-        proximoCodigo++;
+		
+		if(this.disponivel == null)
+			this.disponivel = true;
+		
     }
-
-    public void movimentar(boolean status) {
-        this.disponivel = status;
-    }
-
-    public String getISBN() {
+	
+	public int getId(){
+		return id;
+	}
+	
+	public String getISBN() {
         return ISBN;
     }
 
@@ -51,10 +62,6 @@ public class Livro {
         return editora;
     }
 
-    public int getCodigo() {
-        return codigo;
-    }
-
     public int getAnoPublicacao() {
         return anoPublicacao;
     }
@@ -67,7 +74,7 @@ public class Livro {
     public String toString() {
         String msg;
 
-        msg = "-- " + codigo + ": " + nome + " (" + anoPublicacao + ", " + editora + ")\n"
+        msg = "-- " + id + ": " + nome + " (" + anoPublicacao + ", " + editora + ")\n"
             + "-- ISBN: " + ISBN + "\n"
             + "-- Autor(es): " + autores + "\n"
             + "-- Disponível: " + (isDisponivel() ? "Sim" : "Não");

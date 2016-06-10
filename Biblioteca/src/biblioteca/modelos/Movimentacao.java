@@ -11,13 +11,20 @@ import java.util.ArrayList;
  */
 public class Movimentacao {
     
-    private static int proximoCodigo = 1;
-    
-    private int codigo, diasAtraso = 0;
+    private int id, diasAtraso = 0;
     private Cliente cliente;
     private ArrayList<Livro> livros;
     private LocalDate dataRetirada, dataEstimadaDevolucao, dataDevolucao = null;
     
+	public Movimentacao(id, Cliente cliente, ArrayList<Livro> livros) {
+        this.cliente = cliente;
+        this.livros = livros;
+        this.dataRetirada = LocalDate.now();
+        this.dataEstimadaDevolucao = dataRetirada.plusDays(3);
+        codigo = proximoCodigo;
+        proximoCodigo++;
+    }
+	
     /**
      * Cria uma movimentação para registro. O ArrayList de Livros pode conter, no máximo, 3 itens.
      * @param cliente

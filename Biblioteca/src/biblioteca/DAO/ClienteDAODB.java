@@ -188,5 +188,38 @@ public class ClienteDAODB implements ClienteDAO {
         return null;
 
     }
+	
+	/**
+	 * Retorna a quantidade de empréstimos pendentes de devolução
+	 * 
+	 * @param id O id do cliente a consultar
+	 * @return int A quant de livros emprestados ou 0, se não houver
+	 */
+	public int verificarNroEmprestimos( int id ){
+		
+		int quantidade;
+		
+		try {
+
+            String sql = "SELECT COUNT(ml.id) AS quant" +
+						 "FROM cliente c, movimentacao m, mov_livro ml" + 
+						 "WHERE c.id = ? AND ml.dataDevolucao = NULL AND" +
+						       "c.id = m.idCliente AND m.id = ml.idMovimentacao";
+
+            PreparedStatement query = conexao.prepareStatement(sql);
+
+            query.setInt(1, id);
+
+            ResultSet result = query.executeQuery();
+
+            return result.getInt("quant");
+
+        } catch (SQLException ex) {
+
+            Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+		
+	}
 
 }
