@@ -2,6 +2,7 @@ package biblioteca;
 
 import biblioteca.telas.TelaClientes;
 import biblioteca.modelos.Cliente;
+import biblioteca.telas.TelaLivros;
 import biblioteca.utilidades.Console;
 import biblioteca.utilidades.OpcoesMenus;
 
@@ -36,6 +37,9 @@ public class Biblioteca {
                     case OpcoesMenus.OP_CLIENTES:
                         TelaClientes.executar();
                         break;
+                    case OpcoesMenus.OP_LIVROS:
+                        TelaLivros.executar();
+                        break;
                     case OpcoesMenus.OP_SAIR:
                         sair = true;
                         break;
@@ -62,6 +66,7 @@ public class Biblioteca {
             + "--::::::::::::::::\n"
             + "-- Selecione uma opção:\n"
             + "-- 1: Clientes\n"
+            + "-- 2: Livros\n"
             + "-- 5: Sair";
 
         Console.println(msg);

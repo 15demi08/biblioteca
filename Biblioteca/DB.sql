@@ -16,6 +16,8 @@ CREATE TABLE livro (
     autores varchar(100) NOT NULL,
     editora varchar(100) NOT NULL,
     anoPublicacao int NOT NULL,
+    disponivel boolean DEFAULT true,
+    status boolean DEFAULT true,
 
     PRIMARY KEY (id)
 

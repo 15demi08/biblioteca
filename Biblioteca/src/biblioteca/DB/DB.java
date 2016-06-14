@@ -18,15 +18,15 @@ import java.util.logging.Logger;
  */
 public class DB {
     
-    private static Connection conexao;
+    private Connection conexao;
     
-    private DB (){
+    public DB (){
         
         try {
             
             Class.forName("org.postgresql.Driver");
             
-            DB.conexao = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Biblioteca_LP2", "postgres", "123456");
+            conexao = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Biblioteca_LP2", "postgres", "123456");
             
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, ex);
@@ -34,7 +34,7 @@ public class DB {
         
     }
 
-    public static Connection getConexao() {
+    public Connection getConexao() {
         return conexao;
     }
     

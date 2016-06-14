@@ -23,7 +23,7 @@ public class ClienteDAODB implements ClienteDAO {
 
     public ClienteDAODB() {
 
-        this.conexao = DB.getConexao();
+        this.conexao = new DB().getConexao();
 
     }
 
@@ -42,7 +42,14 @@ public class ClienteDAODB implements ClienteDAO {
 
             while (result.next()) {
 
-                resultado.add(new Cliente(result.getInt("id"), result.getString("nome"), result.getString("telefone"), result.getString("cpf")));
+                resultado.add(
+                    new Cliente(
+                        result.getInt("id"),
+                        result.getString("nome"),
+                        result.getString("telefone"),
+                        result.getString("cpf")
+                    )
+                );
 
             }
 
@@ -198,6 +205,7 @@ public class ClienteDAODB implements ClienteDAO {
      * @param id O id do cliente a consultar
      * @return int A quant de livros emprestados ou 0, se não houver
      */
+    @Override
     public int verificarNroEmprestimos(int id) {
 
         int quantidade = 0;
@@ -205,9 +213,9 @@ public class ClienteDAODB implements ClienteDAO {
         try {
 
             String sql = "SELECT COUNT(ml.id) AS quant"
-                        + "FROM cliente c, movimentacao m, mov_livro ml"
-                        + "WHERE c.id = ? AND ml.dataDevolucao = NULL AND"
-                        + "c.id = m.idCliente AND m.id = ml.idMovimentacao";
+                    + "FROM cliente c, movimentacao m, mov_livro ml"
+                    + "WHERE c.id = ? AND ml.dataDevolucao = NULL AND"
+                    + "c.id = m.idCliente AND m.id = ml.idMovimentacao";
 
             PreparedStatement query = conexao.prepareStatement(sql);
 
@@ -222,9 +230,9 @@ public class ClienteDAODB implements ClienteDAO {
             Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
 
         }
-        
+
         return quantidade;
-        
+
     }
 
 }

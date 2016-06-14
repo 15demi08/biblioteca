@@ -2,7 +2,6 @@
  * Biblioteca - Sistema de Movimentação de Livros
  *
  * Demétrius Jr. (github.com/15demi08)
- *
  */
 package biblioteca.DAO;
 
@@ -15,12 +14,6 @@ import java.util.ArrayList;
  */
 public interface ClienteDAO extends DAO<Cliente> {
     
-    /**
-     * Retorna todos os clientes do banco
-     * @return
-     */
-    ArrayList<Cliente> listarTodosClientes();
-
     @Override
     public boolean atualizar(Cliente obj);
 
@@ -33,6 +26,12 @@ public interface ClienteDAO extends DAO<Cliente> {
     @Override
     public Cliente obter(int id);
     
+    /**
+     * Retorna todos os clientes do banco
+     * @return
+     */
+    ArrayList<Cliente> listarTodosClientes();
     
+    public int verificarNroEmprestimos(int id);
     
 }

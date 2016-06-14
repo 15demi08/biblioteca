@@ -12,41 +12,50 @@ package biblioteca.modelos;
 public class Livro {
 
     private String ISBN, nome, autores, editora;
-    private int id = null, anoPublicacao;
-    private boolean disponivel = null;
+    private int id = 0, anoPublicacao;
+    private boolean disponivel = true;
 
-	/**
-	 * Cria um novo livro com os dados especificados
-	 */
-    public Livro(int id, String ISBN, String nome, String autores, String editora, int anoPublicacao, boolean disponivel) {
-		
-        this.id = id;
-		this.disponivel = disponivel;
-		Livro(ISBN, nome, autores, editora, anoPublicacao);
-		
-    }
-	
-	/**
-	 * Cria um livro sem id, para inserção no banco
-	 */
-	public Livro(String ISBN, String nome, String autores, String editora, int anoPublicacao) {
-		
+    /**
+     * Cria um livro sem id, para inserção no banco
+     * @param ISBN
+     * @param nome
+     * @param autores
+     * @param editora
+     * @param anoPublicacao
+     */
+    public Livro(String ISBN, String nome, String autores, String editora, int anoPublicacao) {
+
         this.ISBN = ISBN;
         this.nome = nome;
         this.autores = autores;
         this.editora = editora;
         this.anoPublicacao = anoPublicacao;
-		
-		if(this.disponivel == null)
-			this.disponivel = true;
-		
+
     }
-	
-	public int getId(){
-		return id;
-	}
-	
-	public String getISBN() {
+    
+    /**
+     * Cria um novo livro com os dados especificados
+     * @param id
+     * @param ISBN
+     * @param nome
+     * @param autores
+     * @param editora
+     * @param anoPublicacao
+     * @param disponivel
+     */
+    public Livro(int id, String ISBN, String nome, String autores, String editora, int anoPublicacao, boolean disponivel) {
+
+        this(ISBN, nome, autores, editora, anoPublicacao);
+        this.id = id;
+        this.disponivel = disponivel;
+
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getISBN() {
         return ISBN;
     }
 
@@ -75,9 +84,9 @@ public class Livro {
         String msg;
 
         msg = "-- " + id + ": " + nome + " (" + anoPublicacao + ", " + editora + ")\n"
-            + "-- ISBN: " + ISBN + "\n"
-            + "-- Autor(es): " + autores + "\n"
-            + "-- Disponível: " + (isDisponivel() ? "Sim" : "Não");
+                + "-- ISBN: " + ISBN + "\n"
+                + "-- Autor(es): " + autores + "\n"
+                + "-- Disponível: " + (isDisponivel() ? "Sim" : "Não");
 
         return msg;
     }

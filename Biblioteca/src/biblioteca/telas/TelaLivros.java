@@ -1,10 +1,10 @@
 package biblioteca.telas;
 
-import biblioteca.controladores.CadastrarLivro;
-import biblioteca.controladores.ConsultarLivroCodigo;
-import biblioteca.repositorios.RepositorioLivros;
+import biblioteca.DAO.LivroDAODB;
+import biblioteca.modelos.Livro;
 import biblioteca.utilidades.Console;
 import biblioteca.utilidades.OpcoesMenus;
+import java.util.ArrayList;
 
 /**
  *
@@ -27,14 +27,13 @@ public class TelaLivros {
                 switch (opcao) {
 
                     case OpcoesMenus.LIVRO_OP_CADASTRAR:
-                        CadastrarLivro.executar();
+                        cadastrarLivro();
                         break;
                     case OpcoesMenus.LIVRO_OP_LISTAR:
-                        Console.println("-- Listando Itens do Repositório de Livros");
-                        RepositorioLivros.getInstancia().listarItens();
+                        listarLivros();
                         break;
                     case OpcoesMenus.LIVRO_OP_CONSULTAR:
-                        ConsultarLivroCodigo.executar();
+                        consultarLivroCodigo();
                         break;
                     case OpcoesMenus.LIVRO_OP_VOLTAR:
                         sair = true;
@@ -63,10 +62,42 @@ public class TelaLivros {
             + "-- 1: Cadastrar\n"
             + "-- 2: Listar\n"
             + "-- 3: Consultar\n"
-            + "-- 4: Voltar\n";
+            + "-- 4: Voltar";
 
         Console.println(msg);
 
+    }
+
+    private static void cadastrarLivro() {
+        // Cadastrar livros
+    }
+
+    private static void listarLivros() {
+        
+        LivroDAODB lddb = new LivroDAODB();
+        
+        ArrayList<Livro> livros = lddb.listarTodosLivros();
+        
+        if( livros == null ){
+            
+            Console.println("-- Nenhum livro cadastrado!");
+            
+        } else {
+            
+            for( Livro l : livros ){
+                
+                Console.println(l);
+                
+            }
+            
+            Console.println("--");
+            
+        }
+
+    }
+
+    private static void consultarLivroCodigo() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

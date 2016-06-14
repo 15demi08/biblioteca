@@ -1,7 +1,10 @@
 package biblioteca.telas;
 
+import biblioteca.DAO.ClienteDAODB;
+import biblioteca.modelos.Cliente;
 import biblioteca.utilidades.Console;
 import biblioteca.utilidades.OpcoesMenus;
+import java.util.ArrayList;
 
 /**
  *
@@ -77,8 +80,25 @@ public class TelaClientes {
     }
 
     private static void listarClientes() {
-        Console.println("-- Este método chama ClienteDAODB.listarTodosClientes()\n"
-                      + "-- e itera pelo ArrayList de resultado, imprimindo na tela os seus itens\n");
+        
+        ClienteDAODB cddb = new ClienteDAODB();
+        
+        ArrayList<Cliente> clientes = cddb.listarTodosClientes();
+        
+        if( clientes == null ){
+            
+            Console.println("-- Nenhum cliente cadastrado!");
+            
+        } else {
+            
+            for( Cliente c : clientes ){
+                Console.println(c);
+            }
+            
+            Console.println("--");
+            
+        }
+        
     }
 
     private static void consultarCliente() {
