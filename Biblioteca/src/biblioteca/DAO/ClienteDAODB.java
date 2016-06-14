@@ -29,21 +29,21 @@ public class ClienteDAODB implements ClienteDAO {
 
     @Override
     public ArrayList<Cliente> listarTodosClientes() {
-        
+
         ArrayList<Cliente> resultado = new ArrayList<>();
-        
+
         try {
 
             String sql = "SELECT * FROM cliente";
-            
+
             Statement query = conexao.createStatement();
 
             ResultSet result = query.executeQuery(sql);
 
-            while( result.next() ){
-                
-                resultado.add(new Cliente(result.getInt("id"), result.getString("nome"), result.getString("telefone")));
-                
+            while (result.next()) {
+
+                resultado.add(new Cliente(result.getInt("id"), result.getString("nome"), result.getString("telefone"), result.getString("cpf")));
+
             }
 
             return resultado;
@@ -54,69 +54,72 @@ public class ClienteDAODB implements ClienteDAO {
 
         }
 
-        return null;       
-        
-        
+        return null;
+
     }
 
     /**
      * Atualiza o cliente na base, com suas novas informações
+     *
      * @param obj O cliente, contendo os novos dados, a ser atualizado
      * @return True em caso de sucesso, false caso contrário.
      */
     @Override
     public boolean atualizar(Cliente obj) {
-        
+
         try {
-            
+
             String sql = "UPDATE cliente SET nome = ?, telefone = ? WHERE id = ?";
-            
+
             PreparedStatement query = conexao.prepareStatement(sql);
-            
+
             query.setString(1, obj.getNome());
             query.setString(2, obj.getTelefone());
             query.setInt(3, obj.getId());
-            
-            if( query.executeUpdate() > 0 )
+
+            if (query.executeUpdate() > 0) {
                 return true;
-            
+            }
+
         } catch (SQLException ex) {
-            
+
             Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
-        
+
         }
-        
+
         return false;
-        
+
     }
 
     /**
      * "Deleta" (desativa) um cliente na base de dados
+     *
      * @param id O cliente a ser desativado
      * @return True em caso de sucesso, false caso contrário.
      */
     @Override
     public boolean deletar(int id) {
-        
+
         try {
-            
+
             String sql = "UPDATE cliente SET status = false WHERE id = ?";
-            
+
             PreparedStatement query = conexao.prepareStatement(sql);
-            
+
             query.setInt(1, id);
-            
-            if( query.executeUpdate() > 0 )
+
+            if (query.executeUpdate() > 0) {
                 return true;
-            
+            }
+
         } catch (SQLException ex) {
-            
+
             Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
-        
+
         }
-        
+
         return false;
-        
+
     }
 
     /**
@@ -138,11 +141,11 @@ public class ClienteDAODB implements ClienteDAO {
             query.setString(2, obj.getTelefone());
 
             if (query.executeUpdate() > 0) {
-             
+
                 ResultSet id = query.getGeneratedKeys();
 
                 return id.getInt(1);
-            
+
             }
 
         } catch (SQLException ex) {
@@ -175,7 +178,7 @@ public class ClienteDAODB implements ClienteDAO {
 
             ResultSet result = query.executeQuery();
 
-            Cliente cliente = new Cliente(result.getInt("id"), result.getString("nome"), result.getString("telefone"));
+            Cliente cliente = new Cliente(result.getInt("id"), result.getString("nome"), result.getString("telefone"), result.getString("cpf"));
 
             return cliente;
 
@@ -188,23 +191,23 @@ public class ClienteDAODB implements ClienteDAO {
         return null;
 
     }
-	
-	/**
-	 * Retorna a quantidade de empréstimos pendentes de devolução
-	 * 
-	 * @param id O id do cliente a consultar
-	 * @return int A quant de livros emprestados ou 0, se não houver
-	 */
-	public int verificarNroEmprestimos( int id ){
-		
-		int quantidade;
-		
-		try {
 
-            String sql = "SELECT COUNT(ml.id) AS quant" +
-						 "FROM cliente c, movimentacao m, mov_livro ml" + 
-						 "WHERE c.id = ? AND ml.dataDevolucao = NULL AND" +
-						       "c.id = m.idCliente AND m.id = ml.idMovimentacao";
+    /**
+     * Retorna a quantidade de empréstimos pendentes de devolução
+     *
+     * @param id O id do cliente a consultar
+     * @return int A quant de livros emprestados ou 0, se não houver
+     */
+    public int verificarNroEmprestimos(int id) {
+
+        int quantidade = 0;
+
+        try {
+
+            String sql = "SELECT COUNT(ml.id) AS quant"
+                        + "FROM cliente c, movimentacao m, mov_livro ml"
+                        + "WHERE c.id = ? AND ml.dataDevolucao = NULL AND"
+                        + "c.id = m.idCliente AND m.id = ml.idMovimentacao";
 
             PreparedStatement query = conexao.prepareStatement(sql);
 
@@ -212,14 +215,16 @@ public class ClienteDAODB implements ClienteDAO {
 
             ResultSet result = query.executeQuery();
 
-            return result.getInt("quant");
+            quantidade = result.getInt("quant");
 
         } catch (SQLException ex) {
 
             Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
 
         }
-		
-	}
+        
+        return quantidade;
+        
+    }
 
 }

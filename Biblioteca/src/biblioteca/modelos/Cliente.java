@@ -2,38 +2,43 @@ package biblioteca.modelos;
 
 /**
  * Representa um cliente da biblioteca
+ *
  * @author Demétrius Jr.
  */
 public class Cliente {
-    
-    private int id;       
-    private String nome, telefone;
 
-	/**
+    private int id;
+    private String nome, telefone, cpf;
+
+    /**
      * Cria um cliente sem id, para inserção no banco
-	 * @param nome
-     * @param telefone 
+     *
+     * @param nome
+     * @param telefone
      */
-    public Cliente(String nome, String telefone) {
+    public Cliente(String nome, String telefone, String cpf) {
         this.nome = nome;
         this.telefone = telefone;
+        this.cpf = cpf;
     }
-	
+
     /**
      * Cria um cliente com os dados especificados
+     *
      * @param id
      * @param nome
-     * @param telefone 
+     * @param telefone
+     * @param cpf
      */
-    public Cliente(int id, String nome, String telefone) {
+    public Cliente(int id, String nome, String telefone, String cpf) {
+        this(nome, telefone, cpf);
         this.id = id;
-        Cliente( nome, telefone );
     }
-	
+
     public int getId() {
-		return id;
+        return id;
     }
-	
+
     public String getNome() {
         return nome;
     }
@@ -41,10 +46,14 @@ public class Cliente {
     public String getTelefone() {
         return telefone;
     }
-	
+
+    public String getCpf() {
+        return cpf;
+    }
+
     @Override
     public String toString() {
         return "-- " + id + ": " + nome + ", " + telefone;
     }
-    
+
 }

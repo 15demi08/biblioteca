@@ -29,41 +29,41 @@ public class LivroDAODB implements LivroDAO {
 
     @Override
     public ArrayList<Livro> listarTodosLivros() {
-        
+
         ArrayList<Livro> resultado = new ArrayList<>();
-        
+
         try {
 
             String sql = "SELECT * FROM livro";
-            
+
             Statement query = conexao.createStatement();
 
             ResultSet result = query.executeQuery(sql);
 
-            if( result.hasNext() ){
-				
-				while( result.next() ){
-				
-					resultado.add(
-						new Livro(
-							result.getInt("id"),
-							result.getString("isbn"),
-							result.getString("nome"),
-							result.getString("autores"),
-							result.getString("editora"),
-							result.getBoolean("disponivel")	
-						)
-					);
-                
-				}
-				
-				return resultado;
-				
-			} else {
+            if (result.hasNext()) {
 
-				return null;
-			
-			}
+                while (result.next()) {
+
+                    resultado.add(
+                            new Livro(
+                                    result.getInt("id"),
+                                    result.getString("isbn"),
+                                    result.getString("nome"),
+                                    result.getString("autores"),
+                                    result.getString("editora"),
+                                    result.getBoolean("disponivel")
+                            )
+                    );
+
+                }
+
+                return resultado;
+
+            } else {
+
+                return null;
+
+            }
 
         } catch (SQLException ex) {
 
@@ -71,72 +71,75 @@ public class LivroDAODB implements LivroDAO {
 
         }
 
-        return null;       
-        
-        
+        return null;
+
     }
 
     /**
      * Atualiza o Livro na base, com suas novas informações
+     *
      * @param obj O Livro, contendo os novos dados, a ser atualizado
      * @return True em caso de sucesso, false caso contrário.
      */
     @Override
     public boolean atualizar(Livro obj) {
-        
+
         try {
-            
+
             String sql = "UPDATE livro SET isbn = ?, nome = ?, autores = ?, editora = ?, anoPublicacao = ? WHERE id = ?";
-            
+
             PreparedStatement query = conexao.prepareStatement(sql);
-            
-            query.setString(1,obj.getISBN());
-			query.setString(2,obj.getNome());
-			query.setString(3,obj.getAutores());
-			query.setString(4,obj.getEditora());
-			query.setInt(5,obj.getAnoPublicacao());
-			query.setInt(6,obj.getId());
-            
-            if( query.executeUpdate() > 0 )
+
+            query.setString(1, obj.getISBN());
+            query.setString(2, obj.getNome());
+            query.setString(3, obj.getAutores());
+            query.setString(4, obj.getEditora());
+            query.setInt(5, obj.getAnoPublicacao());
+            query.setInt(6, obj.getId());
+
+            if (query.executeUpdate() > 0) {
                 return true;
-            
+            }
+
         } catch (SQLException ex) {
-            
+
             Logger.getLogger(LivroDAODB.class.getName()).log(Level.SEVERE, null, ex);
-        
+
         }
-        
+
         return false;
-        
+
     }
 
     /**
      * "Deleta" (desativa) um Livro na base de dados
+     *
      * @param id O Livro a ser desativado
      * @return True em caso de sucesso, false caso contrário.
      */
     @Override
     public boolean deletar(int id) {
-        
+
         try {
-            
+
             String sql = "UPDATE livro SET status = false WHERE id = ?";
-            
+
             PreparedStatement query = conexao.prepareStatement(sql);
-            
+
             query.setInt(1, id);
-            
-            if( query.executeUpdate() > 0 )
+
+            if (query.executeUpdate() > 0) {
                 return true;
-            
+            }
+
         } catch (SQLException ex) {
-            
+
             Logger.getLogger(LivroDAODB.class.getName()).log(Level.SEVERE, null, ex);
-        
+
         }
-        
+
         return false;
-        
+
     }
 
     /**
@@ -154,18 +157,18 @@ public class LivroDAODB implements LivroDAO {
 
             PreparedStatement query = conexao.prepareStatement(sql);
 
-            query.setString(1,obj.getISBN());
-			query.setString(2,obj.getNome());
-			query.setString(3,obj.getAutores());
-			query.setString(4,obj.getEditora());
-			query.setInt(5,obj.getAnoPublicacao());
+            query.setString(1, obj.getISBN());
+            query.setString(2, obj.getNome());
+            query.setString(3, obj.getAutores());
+            query.setString(4, obj.getEditora());
+            query.setInt(5, obj.getAnoPublicacao());
 
             if (query.executeUpdate() > 0) {
-             
+
                 ResultSet id = query.getGeneratedKeys();
 
                 return id.getInt(1);
-            
+
             }
 
         } catch (SQLException ex) {
@@ -197,23 +200,23 @@ public class LivroDAODB implements LivroDAO {
             query.setInt(1, id);
 
             ResultSet result = query.executeQuery();
-			
-			if( result.hasNext() ){
-				
-				Livro Livro = new Livro(result.getInt("id"),
-									result.getString("isbn"),
-									result.getString("nome"),
-									result.getString("autores"),
-									result.getString("editora"),
-									result.getBoolean("disponivel"));
 
-				return Livro;
-				
-			} else {
-				
-				return null;
-				
-			}
+            if (result.hasNext()) {
+
+                Livro Livro = new Livro(result.getInt("id"),
+                        result.getString("isbn"),
+                        result.getString("nome"),
+                        result.getString("autores"),
+                        result.getString("editora"),
+                        result.getBoolean("disponivel"));
+
+                return Livro;
+
+            } else {
+
+                return null;
+
+            }
 
         } catch (SQLException ex) {
 
@@ -224,80 +227,82 @@ public class LivroDAODB implements LivroDAO {
         return null;
 
     }
-	
-	/**
-	 * Movimenta o livro, indicando retirada ou devolução.
-	 * 
-	 * @param id O id do livro a ser movimentado
-	 * @param status Pode ser Livro.STATUS_DISPONIVEL ou Livro.STATUS_INDISPONIVEL
-	 * 
-	 * @return True ou Falso, de acordo com o êxito, ou não, da operação
-	 */
-	public boolean movimentar( int id, boolean status ){
-		
-		try{
-			
-			String sql = "UPDATE livro SET disponivel = ? WHERE id = ?";
-			
-			PreparedStatement query = conexao.prepareStatement(sql);
-			
-			query.setBoolean(1, status);
-			query.setInt(2, id);
-			
-			if(  query.executeUpdate > 0 )
-				return true;
-			
-		} catch (SQLException ex) {
+
+    /**
+     * Movimenta o livro, indicando retirada ou devolução.
+     *
+     * @param id O id do livro a ser movimentado
+     * @param status Pode ser Livro.STATUS_DISPONIVEL ou
+     * Livro.STATUS_INDISPONIVEL
+     *
+     * @return True ou Falso, de acordo com o êxito, ou não, da operação
+     */
+    public boolean movimentar(int id, boolean status) {
+
+        try {
+
+            String sql = "UPDATE livro SET disponivel = ? WHERE id = ?";
+
+            PreparedStatement query = conexao.prepareStatement(sql);
+
+            query.setBoolean(1, status);
+            query.setInt(2, id);
+
+            if (query.executeUpdate > 0) {
+                return true;
+            }
+
+        } catch (SQLException ex) {
 
             Logger.getLogger(LivroDAODB.class.getName()).log(Level.SEVERE, null, ex);
 
         }
-		
-		return false;
-		
-	}
-	
-	/**
-	 * Consulta os livros atualmente disponíveis para retirada.
-	 * 
-	 * @return ArrayList com os livros disponíveis, ou null caso não haja nenhum
-	 */
-	public ArrayList<Livro> consultaDisponíveis(){
-		
-		ArrayList<Livro> resultado = new ArrayList<>();
-        
+
+        return false;
+
+    }
+
+    /**
+     * Consulta os livros atualmente disponíveis para retirada.
+     *
+     * @return ArrayList com os livros disponíveis, ou null caso não haja nenhum
+     */
+    public ArrayList<Livro> consultaDisponíveis() {
+
+        ArrayList<Livro> resultado = new ArrayList<>();
+
         try {
 
             String sql = "SELECT * FROM livro WHERE disponivel = true AND status = true";
-            
+
             Statement query = conexao.createStatement();
 
             ResultSet result = query.executeQuery(sql);
 
-            if( result.hasNext() ){
-				
-				while( result.next() ){
-				
-					resultado.add(
-						new Livro(
-							result.getInt("id"),
-							result.getString("isbn"),
-							result.getString("nome"),
-							result.getString("autores"),
-							result.getString("editora"),
-							result.getBoolean("disponivel")	
-						)
-					);
-                
-				}
-				
-				return resultado;
-				
-			} else {
+            if (result.hasNext()) {
 
-				return null;
-			
-			}
+                while (result.next()) {
+
+                    resultado.add(
+                            new Livro(
+                                    result.getInt("id"),
+                                    result.getString("isbn"),
+                                    result.getString("nome"),
+                                    result.getString("autores"),
+                                    result.getString("editora"),
+                                    result.getBoolean("disponivel")
+                            )
+                    );
+
+                }
+
+                return resultado;
+
+            } else {
+
+                return null;
+
+            }
 
         } catch (SQLException ex) {
 
@@ -306,50 +311,50 @@ public class LivroDAODB implements LivroDAO {
         }
 
         return null;
-		
-	}
-	
-	/**
-	 * Consulta os livros atualmente excluídos (desativados) da biblioteca
-	 * 
-	 * @return Arraylist conm os livros excluídos ou null, se não houver nenhum.
-	 */
-	public ArrayList<Livro> consultaExcluidos(){
-		
-		ArrayList<Livro> resultado = new ArrayList<>();
-        
+
+    }
+
+    /**
+     * Consulta os livros atualmente excluídos (desativados) da biblioteca
+     *
+     * @return Arraylist conm os livros excluídos ou null, se não houver nenhum.
+     */
+    public ArrayList<Livro> consultaExcluidos() {
+
+        ArrayList<Livro> resultado = new ArrayList<>();
+
         try {
 
             String sql = "SELECT * FROM livro WHERE status = false";
-            
+
             Statement query = conexao.createStatement();
 
             ResultSet result = query.executeQuery(sql);
 
-            if( result.hasNext() ){
-				
-				while( result.next() ){
-				
-					resultado.add(
-						new Livro(
-							result.getInt("id"),
-							result.getString("isbn"),
-							result.getString("nome"),
-							result.getString("autores"),
-							result.getString("editora"),
-							result.getBoolean("disponivel")	
-						)
-					);
-                
-				}
-				
-				return resultado;
-				
-			} else {
+            if (result.hasNext()) {
 
-				return null;
-			
-			}
+                while (result.next()) {
+
+                    resultado.add(
+                            new Livro(
+                                    result.getInt("id"),
+                                    result.getString("isbn"),
+                                    result.getString("nome"),
+                                    result.getString("autores"),
+                                    result.getString("editora"),
+                                    result.getBoolean("disponivel")
+                            )
+                    );
+
+                }
+
+                return resultado;
+
+            } else {
+
+                return null;
+
+            }
 
         } catch (SQLException ex) {
 
@@ -358,7 +363,7 @@ public class LivroDAODB implements LivroDAO {
         }
 
         return null;
-		
-	}
+
+    }
 
 }
