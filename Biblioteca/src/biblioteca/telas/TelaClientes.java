@@ -74,9 +74,23 @@ public class TelaClientes {
     }
 
     private static void cadastrarCliente() {
-        Console.println("-- Usuario digita dados.\n"
-                      + "-- Este método cria um objeto Cliente com os dados digitados\n"
-                      + "-- e chama ClienteDAODB.inserir() passando o objeto");
+        
+        ClienteDAODB cddb = new ClienteDAODB();
+        
+        Console.println("-- Cadastrando cliente");
+        
+        String cpf, nome, telefone;
+        
+        cpf = Console.readString("-- CPF: ");
+        nome = Console.readString("-- Nome: ");
+        telefone = Console.readString("-- Telefone: ");
+        
+        Cliente cliente = new Cliente(nome, telefone, cpf);
+        
+        int id = cddb.inserir(cliente);
+        
+        Console.println("-- Cliente " + cliente.getNome() + " cadastrado com sucesso! ID: " + id );
+        
     }
 
     private static void listarClientes() {

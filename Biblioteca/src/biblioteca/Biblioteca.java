@@ -1,7 +1,6 @@
 package biblioteca;
 
 import biblioteca.telas.TelaClientes;
-import biblioteca.modelos.Cliente;
 import biblioteca.telas.TelaLivros;
 import biblioteca.utilidades.Console;
 import biblioteca.utilidades.OpcoesMenus;

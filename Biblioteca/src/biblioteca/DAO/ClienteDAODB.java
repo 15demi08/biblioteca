@@ -140,18 +140,22 @@ public class ClienteDAODB implements ClienteDAO {
 
         try {
 
-            String sql = "INSERT INTO cliente (nome, telefone) VALUES (?, ?)";
+            String sql = "INSERT INTO cliente (nome, telefone, cpf) VALUES (?, ?, ?)";
 
-            PreparedStatement query = conexao.prepareStatement(sql);
+            PreparedStatement query = conexao.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
             query.setString(1, obj.getNome());
             query.setString(2, obj.getTelefone());
+            query.setString(3, obj.getCpf());
 
             if (query.executeUpdate() > 0) {
 
                 ResultSet id = query.getGeneratedKeys();
-
-                return id.getInt(1);
+                
+                if(id.next())
+                    return id.getInt(1);
+                else
+                    return 0;
 
             }
 
@@ -160,7 +164,7 @@ public class ClienteDAODB implements ClienteDAO {
             Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
 
         }
-
+        
         return 0;
 
     }
@@ -198,6 +202,38 @@ public class ClienteDAODB implements ClienteDAO {
         return null;
 
     }
+
+    @Override
+    public ArrayList<Cliente> obterPorCPF() {
+        
+        throw new UnsupportedOperationException("Não implementado!");
+
+    }
+
+    @Override
+    public boolean verificarCPF(String cpf) {
+    
+        try {
+            
+            String sql = "SELECT * FROM cliente WHERE cpf = ?";
+            
+            PreparedStatement query = conexao.prepareStatement(sql);
+            
+            ResultSet result = query.executeQuery();
+            
+            return result.next();
+            
+        } catch (SQLException ex) {
+            
+            Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+        
+        }
+        
+        return false;
+        
+    }
+    
+    
 
     /**
      * Retorna a quantidade de empréstimos pendentes de devolução

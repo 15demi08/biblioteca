@@ -32,6 +32,24 @@ public interface ClienteDAO extends DAO<Cliente> {
      */
     ArrayList<Cliente> listarTodosClientes();
     
+    /**
+     *
+     * @return
+     */
+    public ArrayList<Cliente> obterPorCPF();
+    
+    /**
+     *
+     * @param cpf
+     * @return
+     */
+    public boolean verificarCPF( String cpf );
+    
+    /**
+     *
+     * @param id
+     * @return
+     */
     public int verificarNroEmprestimos(int id);
     
 }
