@@ -51,6 +51,18 @@ public class Cliente {
         return cpf;
     }
 
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
     @Override
     public String toString() {
         return "-- " + id + ": " + nome + ", " + telefone;

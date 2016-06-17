@@ -34,7 +34,7 @@ public class ClienteDAODB implements ClienteDAO {
 
         try {
 
-            String sql = "SELECT * FROM cliente";
+            String sql = "SELECT * FROM cliente WHERE status = true ORDER BY id";
 
             Statement query = conexao.createStatement();
 
@@ -65,6 +65,44 @@ public class ClienteDAODB implements ClienteDAO {
 
     }
 
+    @Override
+    public ArrayList<Cliente> listarExcluidos() {
+
+        ArrayList<Cliente> resultado = new ArrayList<>();
+
+        try {
+
+            String sql = "SELECT * FROM cliente WHERE status = false ORDER BY id";
+
+            Statement query = conexao.createStatement();
+
+            ResultSet result = query.executeQuery(sql);
+
+            while (result.next()) {
+
+                resultado.add(
+                    new Cliente(
+                        result.getInt("id"),
+                        result.getString("nome"),
+                        result.getString("telefone"),
+                        result.getString("cpf")
+                    )
+                );
+
+            }
+
+            return resultado;
+
+        } catch (SQLException ex) {
+
+            Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+
+        return null;
+        
+    }
+
     /**
      * Atualiza o cliente na base, com suas novas informações
      *
@@ -76,13 +114,14 @@ public class ClienteDAODB implements ClienteDAO {
 
         try {
 
-            String sql = "UPDATE cliente SET nome = ?, telefone = ? WHERE id = ?";
+            String sql = "UPDATE cliente SET nome = ?, telefone = ?, cpf = ? WHERE id = ?";
 
             PreparedStatement query = conexao.prepareStatement(sql);
 
             query.setString(1, obj.getNome());
             query.setString(2, obj.getTelefone());
-            query.setInt(3, obj.getId());
+            query.setString(3, obj.getCpf());
+            query.setInt(4, obj.getId());
 
             if (query.executeUpdate() > 0) {
                 return true;
@@ -189,9 +228,17 @@ public class ClienteDAODB implements ClienteDAO {
 
             ResultSet result = query.executeQuery();
 
-            Cliente cliente = new Cliente(result.getInt("id"), result.getString("nome"), result.getString("telefone"), result.getString("cpf"));
-
-            return cliente;
+            if (result.next()) {
+                
+                Cliente cliente = new Cliente(result.getInt("id"), result.getString("nome"), result.getString("telefone"), result.getString("cpf"));
+                
+                return cliente;
+                
+            } else {
+                
+                return null;
+                
+            }
 
         } catch (SQLException ex) {
 
@@ -204,13 +251,6 @@ public class ClienteDAODB implements ClienteDAO {
     }
 
     @Override
-    public ArrayList<Cliente> obterPorCPF() {
-        
-        throw new UnsupportedOperationException("Não implementado!");
-
-    }
-
-    @Override
     public boolean verificarCPF(String cpf) {
     
         try {
@@ -218,6 +258,8 @@ public class ClienteDAODB implements ClienteDAO {
             String sql = "SELECT * FROM cliente WHERE cpf = ?";
             
             PreparedStatement query = conexao.prepareStatement(sql);
+            
+            query.setString(1, cpf);
             
             ResultSet result = query.executeQuery();
             
@@ -232,8 +274,30 @@ public class ClienteDAODB implements ClienteDAO {
         return false;
         
     }
-    
-    
+
+    @Override
+    public boolean verificarStatus(int id) {
+
+        try {
+            
+            String sql = "SELECT status FROM cliente WHERE id = ?";
+            
+            PreparedStatement query = conexao.prepareStatement(sql);
+            
+            query.setInt(1, id);
+            
+            ResultSet result = query.executeQuery(sql);
+            
+            if( result.first() )
+                return result.getBoolean("status");
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return false;
+
+    }
 
     /**
      * Retorna a quantidade de empréstimos pendentes de devolução
@@ -248,10 +312,12 @@ public class ClienteDAODB implements ClienteDAO {
 
         try {
 
-            String sql = "SELECT COUNT(ml.id) AS quant"
-                    + "FROM cliente c, movimentacao m, mov_livro ml"
-                    + "WHERE c.id = ? AND ml.dataDevolucao = NULL AND"
-                    + "c.id = m.idCliente AND m.id = ml.idMovimentacao";
+            String sql =  "SELECT COUNT(ml.id) AS quant"
+                        + "FROM cliente c, movimentacao m, movlivro ml"
+                        + "WHERE c.id = ? AND "
+                        +       "ml.dataDevolucao IS NULL AND"
+                        +       "c.id = m.idCliente AND"
+                        +       "m.id = ml.idMovimentacao";
 
             PreparedStatement query = conexao.prepareStatement(sql);
 

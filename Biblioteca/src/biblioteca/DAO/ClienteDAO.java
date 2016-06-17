@@ -32,11 +32,7 @@ public interface ClienteDAO extends DAO<Cliente> {
      */
     ArrayList<Cliente> listarTodosClientes();
     
-    /**
-     *
-     * @return
-     */
-    public ArrayList<Cliente> obterPorCPF();
+    ArrayList<Cliente> listarExcluidos();
     
     /**
      *
@@ -51,5 +47,12 @@ public interface ClienteDAO extends DAO<Cliente> {
      * @return
      */
     public int verificarNroEmprestimos(int id);
+    
+    /**
+     *
+     * @param id
+     * @return
+     */
+    public boolean verificarStatus(int id);
     
 }

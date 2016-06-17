@@ -22,8 +22,16 @@ public class OpcoesMenus {
     // Opções para a Tela Clientes
     public static final int CLIENTE_OP_CADASTRAR = 1;
     public static final int CLIENTE_OP_LISTAR = 2;
-    public static final int CLIENTE_OP_LISTAR_POR_MATRICULA = 3;
-    public static final int CLIENTE_OP_VOLTAR = 4;
+    public static final int CLIENTE_OP_SELECIONAR = 3;
+    public static final int CLIENTE_OP_LISTAR_EXCLUIDOS = 4;
+    
+    // Sub-menu de Cliente - Operações relacionadas a um cliente específico
+    public static final int CLIENTE_SUB_EDITAR = 1;
+    public static final int CLIENTE_SUB_EXCLUIR = 2;
+    public static final int CLIENTE_SUB_VER_ANDAMENTO = 3;
+    public static final int CLIENTE_SUB_VOLTAR = 4;
+    
+    public static final int CLIENTE_OP_VOLTAR = 5;
     
     // Opções para a Tela Livros
     public static final int LIVRO_OP_CADASTRAR = 1;
@@ -34,7 +42,14 @@ public class OpcoesMenus {
     // Opções para a Tela Movimentos
     public static final int MOV_OP_RETIRAR = 1;
     public static final int MOV_OP_DEVOLVER = 2;
-    public static final int MOV_OP_VOLTAR = 3;
+    public static final int MOV_OP_CONSULTAR = 3;
+    public static final int MOV_OP_SELECIONAR = 4;
+    
+    public static final int MOV_SUB_DEVOLVER_TODOS = 1;
+    public static final int MOV_SUB_VERIFICAR_PENDENTES = 2;
+    public static final int MOV_SUB_VOLTAR = 3;
+        
+    public static final int MOV_OP_VOLTAR = 5;
     
     // Opções para a Tela Relatórios
     public static final int REL_OP_LIVROS_DISP = 1;
