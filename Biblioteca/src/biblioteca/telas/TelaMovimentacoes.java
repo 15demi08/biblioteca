@@ -106,10 +106,35 @@ public class TelaMovimentacoes {
     }
     
     private static void subMenu(Movimentacao movimentacao) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        Console.println("--- Movimentação nº " + movimentacao.getId());
+        
+        String msg;
+
+        msg = "--:::::::::::::::\n"
+            + "-- 1: Devolver todos os livros\n"
+            + "-- 2: Verificar livros pendentes\n"
+            + "-- 3: Voltar";
+
+        Console.println(msg);
+
     }
 
     private static void retirar() {
+        
+        /*
+        
+        Fluxo da Retirada:
+        
+        1 - Escolher Cliente
+        2 - Se cliente já tiver o número máximo de retiradas pendentes, mostrar mensagem. Se não, continuar
+        3 - Receber os livros da retirada, verificar disponibilidade para cada um
+        4 - Movimentá-los (atualizá-los) no banco de dados
+        5 - Inserir a movimentação na tabela correspondente.
+        6 - Inserir os livros na tabela movlivro
+        
+        */
+        
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

@@ -36,7 +36,12 @@ public class OpcoesMenus {
     // Opções para a Tela Livros
     public static final int LIVRO_OP_CADASTRAR = 1;
     public static final int LIVRO_OP_LISTAR = 2;
-    public static final int LIVRO_OP_CONSULTAR = 3;
+    public static final int LIVRO_OP_SELECIONAR = 3;
+    
+    public static final int LIVRO_SUB_EDITAR = 1;
+    public static final int LIVRO_SUB_EXCLUIR = 2;
+    public static final int LIVRO_SUB_VOLTAR = 3;
+    
     public static final int LIVRO_OP_VOLTAR = 4;
     
     // Opções para a Tela Movimentos
@@ -58,6 +63,5 @@ public class OpcoesMenus {
     public static final int REL_OP_ULT_RETIR = 4;
     public static final int REL_OP_ULT_DEV = 5;
     public static final int REL_OP_VOLTAR = 6;
-    
     
 }

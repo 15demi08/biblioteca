@@ -146,9 +146,9 @@ public class LivroDAODB implements LivroDAO {
 
         try {
 
-            String sql = "INSERT INTO livro (isbn, nome, autores, editora, anoPublicacao) VALUES (?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO livro (isbn, nome, autores, editora, anoPublicacao) VALUES (?, ?, ?, ?, ?)";
 
-            PreparedStatement query = conexao.prepareStatement(sql);
+            PreparedStatement query = conexao.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
             query.setString(1, obj.getISBN());
             query.setString(2, obj.getNome());
@@ -160,7 +160,10 @@ public class LivroDAODB implements LivroDAO {
 
                 ResultSet id = query.getGeneratedKeys();
 
-                return id.getInt(1);
+                if(id.next())
+                    return id.getInt(1);
+                else
+                    return 0;
 
             }
 
@@ -194,7 +197,9 @@ public class LivroDAODB implements LivroDAO {
 
             ResultSet result = query.executeQuery();
 
-            Livro Livro = new Livro(
+            if( result.next() ){
+                
+                Livro Livro = new Livro(
                     result.getInt("id"),
                     result.getString("isbn"),
                     result.getString("nome"),
@@ -202,9 +207,15 @@ public class LivroDAODB implements LivroDAO {
                     result.getString("editora"),
                     result.getInt("anoPublicacao"),
                     result.getBoolean("disponivel")
-            );
+                );
 
-            return Livro;
+                return Livro;
+                
+            } else {
+                
+                return null;
+                
+            }
 
         } catch (SQLException ex) {
 
@@ -340,6 +351,30 @@ public class LivroDAODB implements LivroDAO {
 
         return null;
 
+    }
+
+    public boolean verificarISBN(String ISBN) {
+    
+        try {
+            
+            String sql = "SELECT * FROM livro WHERE isbn = ?";
+            
+            PreparedStatement query = conexao.prepareStatement(sql);
+            
+            query.setString(1, ISBN);
+            
+            ResultSet result = query.executeQuery();
+            
+            return result.next();
+            
+        } catch (SQLException ex) {
+            
+            Logger.getLogger(LivroDAODB.class.getName()).log(Level.SEVERE, null, ex);
+        
+        }
+        
+        return false;
+    
     }
 
 }
