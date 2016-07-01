@@ -11,23 +11,20 @@ import biblioteca.modelos.Cliente;
 import biblioteca.utilidades.MSG;
 
 /**
- * Interface para atualização dos dados de um cliente na base de dados.
+ *
  * @author demetrius
  */
-public class AlterarCliente extends javax.swing.JFrame {
+public class CadastrarCliente extends javax.swing.JFrame {
 
     private ClienteDAODB db = new ClienteDAODB();
-    private Cliente cliente;
     private Clientes parent;
-    
+
     /**
      * Creates new form AlterarCliente
-     * @param cliente O cliente a ser alterado
-     * @param parent A janela "pai" desta (Clientes - tela principal), para
-     *               atualização da tabela de clientes
+     *
+     * @param parent
      */
-    public AlterarCliente( Cliente cliente, Clientes parent ) {
-        this.cliente = cliente;
+    public CadastrarCliente(Clientes parent) {
         this.parent = parent;
         initComponents();
     }
@@ -55,7 +52,7 @@ public class AlterarCliente extends javax.swing.JFrame {
 
         tituloJanela.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         tituloJanela.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        tituloJanela.setText("Alterar Cliente");
+        tituloJanela.setText("Cadastrar Cliente");
 
         labelNome.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         labelNome.setText("Nome");
@@ -65,12 +62,6 @@ public class AlterarCliente extends javax.swing.JFrame {
 
         labelTelefone.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         labelTelefone.setText("Telefone");
-
-        txtNome.setText(cliente.getNome());
-
-        txtTelefone.setText(cliente.getTelefone());
-
-        txtCPF.setText(cliente.getCpf());
 
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -82,7 +73,7 @@ public class AlterarCliente extends javax.swing.JFrame {
         btnOK.setText("OK");
         btnOK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                atualizarCliente(evt);
+                cadastrarCliente(evt);
             }
         });
 
@@ -147,51 +138,43 @@ public class AlterarCliente extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * Valida os dados e atualiza o cliente na base
-     * @param evt 
-     */
-    private void atualizarCliente(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_atualizarCliente
-        
-        // Campos vazios
-        if( txtNome.getText().isEmpty() || txtCPF.getText().isEmpty() || txtTelefone.getText().isEmpty()  ){
-            
-            MSG.show(this, "Nenhum campo pode ficar vazio!");
-            
-        // Validar CPF
-        } else if( !(txtCPF.getText().equals(cliente.getCpf())) && db.verificarCPF(txtCPF.getText()) ){
-            
-            MSG.show(this, "CPF informado já existe!");
-            
-        // Nenhuma alteração nos dados
-        } else if( txtNome.getText().equals(cliente.getNome()) &&
-                   txtCPF.getText().equals(cliente.getCpf()) &&
-                   txtTelefone.getText().equals(cliente.getTelefone())){
-            
-            MSG.show(this, "Nenhuma alteração efetuada.");
-            
-        // Tudo OK
-        } else { 
-            
-            cliente.setNome(txtNome.getText());
-            cliente.setCpf(txtCPF.getText());
-            cliente.setTelefone(txtTelefone.getText());
-        
-            if( db.atualizar(cliente) ){
 
-                MSG.show(this, "Cliente atualizado com sucesso!");
+    private void cadastrarCliente(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastrarCliente
+
+        // Campos vazios
+        if (txtNome.getText().isEmpty() || txtCPF.getText().isEmpty() || txtTelefone.getText().isEmpty()) {
+
+            MSG.show(this, "Nenhum campo pode ficar vazio!");
+
+            // Validar CPF
+        } else if (db.verificarCPF(txtCPF.getText())) {
+
+            MSG.show(this, "CPF informado já existe!");
+
+            // Tudo OK
+        } else {
+
+            Cliente cliente = new Cliente(
+                    txtNome.getText().trim(),
+                    txtTelefone.getText().trim(),
+                    txtCPF.getText().trim()
+            );
+
+            if (db.inserir(cliente) > 0) {
+
+                MSG.show(this, "Cliente cadastrado com sucesso!");
                 parent.atualizarDados();
                 this.dispose();
 
             } else {
 
-                MSG.show(this, "Falha na atualização do cliente");
+                MSG.show(this, "Falha no cadstro do cliente");
 
             }
-        
+
         }
-        
-    }//GEN-LAST:event_atualizarCliente
+
+    }//GEN-LAST:event_cadastrarCliente
 
     /**
      * Auto-explicativo
@@ -200,7 +183,7 @@ public class AlterarCliente extends javax.swing.JFrame {
     private void fecharJanela(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fecharJanela
         this.dispose();
     }//GEN-LAST:event_fecharJanela
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnOK;

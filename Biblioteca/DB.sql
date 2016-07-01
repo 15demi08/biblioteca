@@ -2,7 +2,9 @@ CREATE TABLE cliente (
 
     id serial NOT NULL,
     nome varchar(200) NOT NULL,
+    cpf varchar(11) NOT NULL,
     telefone varchar(15) NOT NULL,
+    status boolean DEFAULT true,
 
     PRIMARY KEY (id)
 

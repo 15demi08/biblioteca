@@ -9,26 +9,28 @@ package biblioteca.GUI.cliente;
 import biblioteca.DAO.ClienteDAODB;
 import biblioteca.modelos.Cliente;
 import biblioteca.modelos.ClienteTableModel;
+import biblioteca.utilidades.MSG;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
 
 /**
  *
  * @author demetrius
  */
 public class Clientes extends javax.swing.JFrame {
-    
+
     private ClienteTableModel ctm = new ClienteTableModel();
 
     /**
      * Creates new form GUIClientes
      */
     public Clientes() {
+        atualizarDados();
+        initComponents();
+    }
+
+    public final void atualizarDados() {
         ArrayList<Cliente> clientes = new ClienteDAODB().listarTodosClientes();
         ctm.setDados(clientes);
-        initComponents();
     }
 
     /**
@@ -51,13 +53,22 @@ public class Clientes extends javax.swing.JFrame {
         tituloJanela = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Biblioteca - Clientes");
+        setResizable(false);
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cancelarSelecao(evt);
+            }
+        });
 
         painelListaClientes.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         tabelaClientes.setModel(ctm);
+        tabelaClientes.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tabelaClientes.setShowVerticalLines(false);
         tabelaClientes.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                exibirItem(evt);
+                selecionarItem(evt);
             }
         });
         tabelaClientesContainer.setViewportView(tabelaClientes);
@@ -77,14 +88,24 @@ public class Clientes extends javax.swing.JFrame {
         btnExcluir.setEnabled(false);
         btnExcluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExcluirActionPerformed(evt);
+                excluirCliente(evt);
             }
         });
 
         btnEditar.setText("Editar");
         btnEditar.setEnabled(false);
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editarCliente(evt);
+            }
+        });
 
         btnNovo.setText("Novo");
+        btnNovo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cadastrarCliente(evt);
+            }
+        });
 
         btnVerMovs.setText("Visualizar Movimentações");
         btnVerMovs.setEnabled(false);
@@ -149,21 +170,78 @@ public class Clientes extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnExcluirActionPerformed
+    /**
+     * "Exclui" o cliente selecionado na base
+     *
+     * @param evt
+     */
+    private void excluirCliente(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_excluirCliente
 
-    private void exibirItem(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exibirItem
-        
-        JTable tabela = (JTable)evt.getSource();
-        
-        ListSelectionModel lsm = tabela.getSelectionModel();
-        
-        Cliente c = (Cliente)ctm.getCliente(tabela.getSelectedRow());
-        
-        JOptionPane.showMessageDialog(this, c);
-        
-    }//GEN-LAST:event_exibirItem
+        ClienteDAODB db = new ClienteDAODB();
+        Cliente cliente = ctm.getCliente(tabelaClientes.getSelectedRow());
+
+        if (MSG.confirm(this, "Deseja realmente excluir o cliente selecionado?")) {
+
+            if (db.deletar(cliente.getId())) {
+
+                MSG.show(this, "Cliente excluido com sucesso!");
+                atualizarDados();
+
+            } else {
+
+                MSG.show(this, "Falha na exclusão do cliente.");
+
+            }
+
+        }
+
+    }//GEN-LAST:event_excluirCliente
+
+    /**
+     * Disparado quando o usuário seleciona um item na tabela
+     *
+     * @param evt O Evento gerado.
+     */
+    private void selecionarItem(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selecionarItem
+        btnEditar.setEnabled(true);
+        btnExcluir.setEnabled(true);
+        btnVerMovs.setEnabled(true);
+    }//GEN-LAST:event_selecionarItem
+
+    /**
+     * Disparado quando o usuário clica fora da tabela
+     *
+     * @param evt O Evento gerado.
+     */
+    private void cancelarSelecao(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelarSelecao
+        btnEditar.setEnabled(false);
+        btnExcluir.setEnabled(false);
+        btnVerMovs.setEnabled(false);
+        tabelaClientes.clearSelection();
+    }//GEN-LAST:event_cancelarSelecao
+
+    /**
+     * Inicializa a interface para editar um cliente
+     *
+     * @param evt
+     */
+    private void editarCliente(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarCliente
+        Cliente cliente = ctm.getCliente(tabelaClientes.getSelectedRow());
+        java.awt.EventQueue.invokeLater(() -> {
+            new AlterarCliente(cliente, this).setVisible(true);
+        });
+    }//GEN-LAST:event_editarCliente
+
+    /**
+     * Inicializa a interface para cadastrar um cliente
+     *
+     * @param evt
+     */
+    private void cadastrarCliente(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastrarCliente
+        java.awt.EventQueue.invokeLater(() -> {
+            new CadastrarCliente(this).setVisible(true);
+        });
+    }//GEN-LAST:event_cadastrarCliente
 
     /**
      * @param args the command line arguments
@@ -194,11 +272,8 @@ public class Clientes extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {                
-                new Clientes().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new Clientes().setVisible(true);
         });
     }
 
