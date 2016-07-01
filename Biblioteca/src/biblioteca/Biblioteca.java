@@ -1,5 +1,6 @@
 package biblioteca;
 
+import biblioteca.GUI.cliente.Clientes;
 import biblioteca.telas.TelaClientes;
 import biblioteca.telas.TelaLivros;
 import biblioteca.utilidades.Console;
@@ -7,6 +8,7 @@ import biblioteca.utilidades.OpcoesMenus;
 
 /**
  * Classe principal do Sistema
+ *
  * @author Demétrius Jr.
  */
 public class Biblioteca {
@@ -59,14 +61,14 @@ public class Biblioteca {
     private static void menuPrincipal() {
 
         String msg;
-        
+
         msg = "--::::::::::::::::\n"
-            + "-- Menu Principal\n"
-            + "--::::::::::::::::\n"
-            + "-- Selecione uma opção:\n"
-            + "-- 1: Clientes\n"
-            + "-- 2: Livros\n"
-            + "-- 5: Sair";
+                + "-- Menu Principal\n"
+                + "--::::::::::::::::\n"
+                + "-- Selecione uma opção:\n"
+                + "-- 1: Clientes\n"
+                + "-- 2: Livros\n"
+                + "-- 5: Sair";
 
         Console.println(msg);
     }
