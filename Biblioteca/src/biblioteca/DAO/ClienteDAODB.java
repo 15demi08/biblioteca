@@ -64,6 +64,47 @@ public class ClienteDAODB implements ClienteDAO {
         return null;
 
     }
+    
+    public ArrayList<Cliente> pesquisarPorNome( String nome ){
+        
+        ArrayList<Cliente> resultado = new ArrayList<>();
+
+        try {
+
+            nome = "%" + nome + "%";
+            
+            String sql = "SELECT * FROM cliente WHERE status = true AND nome ILIKE ? ORDER BY id";
+
+            PreparedStatement query = conexao.prepareStatement(sql);
+            
+            query.setString(1, nome);
+
+            ResultSet result = query.executeQuery(sql);
+
+            while (result.next()) {
+
+                resultado.add(
+                    new Cliente(
+                        result.getInt("id"),
+                        result.getString("nome"),
+                        result.getString("telefone"),
+                        result.getString("cpf")
+                    )
+                );
+
+            }
+
+            return resultado;
+
+        } catch (SQLException ex) {
+
+            Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+
+        return null;
+        
+    }
 
     @Override
     public ArrayList<Cliente> listarExcluidos() {
@@ -303,7 +344,8 @@ public class ClienteDAODB implements ClienteDAO {
      * Retorna a quantidade de empréstimos pendentes de devolução
      *
      * @param id O id do cliente a consultar
-     * @return int A quant de livros emprestados ou 0, se não houver
+     * @return int A quant de livros emprestados; 0 se não houver ou -1 se
+     * acontecer algum erro
      */
     @Override
     public int verificarNroEmprestimos(int id) {
@@ -325,7 +367,10 @@ public class ClienteDAODB implements ClienteDAO {
 
             ResultSet result = query.executeQuery();
 
-            quantidade = result.getInt("quant");
+            if( result.next() )
+                quantidade = result.getInt("quant");
+            else
+                return -1;
 
         } catch (SQLException ex) {
 

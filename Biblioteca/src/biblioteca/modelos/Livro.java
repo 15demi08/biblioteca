@@ -79,6 +79,26 @@ public class Livro {
         return disponivel;
     }
 
+    public void setISBN(String ISBN) {
+        this.ISBN = ISBN;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setAutores(String autores) {
+        this.autores = autores;
+    }
+
+    public void setEditora(String editora) {
+        this.editora = editora;
+    }
+
+    public void setAnoPublicacao(int anoPublicacao) {
+        this.anoPublicacao = anoPublicacao;
+    }
+
     @Override
     public String toString() {
         String msg;

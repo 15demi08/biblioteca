@@ -1,8 +1,6 @@
 package biblioteca.modelos;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 /**
@@ -14,35 +12,37 @@ public class Movimentacao {
 
     private int id;
     private Cliente cliente;
-    private ArrayList<Livro> livros;
-    private LocalDate dataRetirada, dataPrevistaDevolucao, dataDevolucao = null;
+    private ArrayList<MovLivro> movLivros;
+    private LocalDate dataRetirada, dataPrevistaDevolucao;
 
     /**
      * Cria uma movimentação sem id, para inserção na base
      * @param cliente
      * @param livros
      */
-    public Movimentacao(Cliente cliente, ArrayList<Livro> livros) {
+    public Movimentacao(Cliente cliente, ArrayList<MovLivro> movLivros) {
         this.cliente = cliente;
-        this.livros = livros;
+        this.movLivros = movLivros;
         this.dataRetirada = LocalDate.now();
         this.dataPrevistaDevolucao = dataRetirada.plusDays(7);
     }
 
     /**
-     * Cria uma movimentação para registro. O ArrayList de Livros pode conter,
-     * no máximo, 3 itens.
-     *
+     * Movimentação armazenada no banco de dados
+     * @param id
      * @param cliente
-     * @param livros
+     * @param movLivros
+     * @param dataRetirada
+     * @param dataPrevistaDevolucao 
      */
-    public Movimentacao(int id, Cliente cliente, ArrayList<Livro> livros) {
+    public Movimentacao(int id, Cliente cliente, ArrayList<MovLivro> movLivros, LocalDate dataRetirada, LocalDate dataPrevistaDevolucao) {
+        this.id = id;
         this.cliente = cliente;
-        this.livros = livros;
-        this.dataRetirada = LocalDate.now();
-        this.dataPrevistaDevolucao = dataRetirada.plusDays(3);
+        this.movLivros = movLivros;
+        this.dataRetirada = dataRetirada;
+        this.dataPrevistaDevolucao = dataPrevistaDevolucao;
     }
-
+    
     public int getId() {
         return id;
     }
@@ -51,54 +51,45 @@ public class Movimentacao {
         return cliente;
     }
 
-    public ArrayList<Livro> getLivros() {
-        return livros;
+    public ArrayList<MovLivro> getMovLivros() {
+        return movLivros;
+    }
+
+    public LocalDate getDataRetirada() {
+        return dataRetirada;
+    }
+
+    public LocalDate getDataPrevistaDevolucao() {
+        return dataPrevistaDevolucao;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public void setMovLivros(ArrayList<MovLivro> movLivros) {
+        this.movLivros = movLivros;
+    }
+
+    public void setDataRetirada(LocalDate dataRetirada) {
+        this.dataRetirada = dataRetirada;
+    }
+
+    public void setDataPrevistaDevolucao(LocalDate dataPrevistaDevolucao) {
+        this.dataPrevistaDevolucao = dataPrevistaDevolucao;
     }
 
     public boolean verificarTodosDevolvidos() {
-
-        for (Livro l : livros) {
-            if (!l.isDisponivel()) {
+        for( MovLivro ml : movLivros ){
+            if(!ml.isDevolvido())
                 return false;
-            }
         }
-
-        dataDevolucao = LocalDate.now();
+        
         return true;
-    }
-
-    @Override
-    public String toString() {
-
-        String retirada, devEstimada, dev;
-
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/uuuu");
-
-        String msg;
-
-        msg = "-- ID : " + id + "\n"
-            + "-------------------\n"
-            + "-- Cliente: " + cliente.getId() + " - " + cliente.getNome() + "\n"
-            + "-- Retirada: " + dataRetirada.format(dtf) + "\n"
-            + "-- Devolução Prevista: " + dataPrevistaDevolucao.format(dtf) + "\n"
-            + "-- Devolucao: " + (dataDevolucao == null ? "Pendente" : dataDevolucao.format(dtf)) + "\n"
-            + "-- Atraso: ";
-
-        if (dataDevolucao == null) {
-            msg += "-\n";
-        } else if (dataDevolucao != null && dataDevolucao.isAfter(dataPrevistaDevolucao)) {
-            msg += dataPrevistaDevolucao.until(dataDevolucao, ChronoUnit.DAYS) + " dia(s)\n";
-        } else {
-            msg += "Devolvido(s) na data estimada ou antes\n";
-        }
-
-        msg += "-- Livros\n";
-
-        for (Livro l : livros) {
-            msg += "---- " + l.getId() + ": " + l.getNome() + "\n";
-        }
-
-        return msg;
     }
 
 }

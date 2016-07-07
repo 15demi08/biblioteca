@@ -138,7 +138,10 @@ public class CadastrarCliente extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-
+    /**
+     * Valida os dados e cadastra um novo cliente na base
+     * @param evt 
+     */
     private void cadastrarCliente(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastrarCliente
 
         // Campos vazios
@@ -146,12 +149,12 @@ public class CadastrarCliente extends javax.swing.JFrame {
 
             MSG.show(this, "Nenhum campo pode ficar vazio!");
 
-            // Validar CPF
+        // Validar CPF
         } else if (db.verificarCPF(txtCPF.getText())) {
 
             MSG.show(this, "CPF informado já existe!");
 
-            // Tudo OK
+        // Tudo OK
         } else {
 
             Cliente cliente = new Cliente(

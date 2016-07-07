@@ -34,7 +34,7 @@ public class LivroDAODB implements LivroDAO {
 
         try {
 
-            String sql = "SELECT * FROM livro WHERE status = true";
+            String sql = "SELECT * FROM livro WHERE status = true ORDER BY id";
 
             Statement query = conexao.createStatement();
 
@@ -160,10 +160,11 @@ public class LivroDAODB implements LivroDAO {
 
                 ResultSet id = query.getGeneratedKeys();
 
-                if(id.next())
+                if (id.next()) {
                     return id.getInt(1);
-                else
+                } else {
                     return 0;
+                }
 
             }
 
@@ -197,24 +198,24 @@ public class LivroDAODB implements LivroDAO {
 
             ResultSet result = query.executeQuery();
 
-            if( result.next() ){
-                
+            if (result.next()) {
+
                 Livro Livro = new Livro(
-                    result.getInt("id"),
-                    result.getString("isbn"),
-                    result.getString("nome"),
-                    result.getString("autores"),
-                    result.getString("editora"),
-                    result.getInt("anoPublicacao"),
-                    result.getBoolean("disponivel")
+                        result.getInt("id"),
+                        result.getString("isbn"),
+                        result.getString("nome"),
+                        result.getString("autores"),
+                        result.getString("editora"),
+                        result.getInt("anoPublicacao"),
+                        result.getBoolean("disponivel")
                 );
 
                 return Livro;
-                
+
             } else {
-                
+
                 return null;
-                
+
             }
 
         } catch (SQLException ex) {
@@ -328,15 +329,15 @@ public class LivroDAODB implements LivroDAO {
             while (result.next()) {
 
                 resultado.add(
-                    new Livro(
-                        result.getInt("id"),
-                        result.getString("isbn"),
-                        result.getString("nome"),
-                        result.getString("autores"),
-                        result.getString("editora"),
-                        result.getInt("anoPublicacao"),
-                        result.getBoolean("disponivel")
-                    )
+                        new Livro(
+                                result.getInt("id"),
+                                result.getString("isbn"),
+                                result.getString("nome"),
+                                result.getString("autores"),
+                                result.getString("editora"),
+                                result.getInt("anoPublicacao"),
+                                result.getBoolean("disponivel")
+                        )
                 );
 
             }
@@ -354,27 +355,27 @@ public class LivroDAODB implements LivroDAO {
     }
 
     public boolean verificarISBN(String ISBN) {
-    
+
         try {
-            
+
             String sql = "SELECT * FROM livro WHERE isbn = ?";
-            
+
             PreparedStatement query = conexao.prepareStatement(sql);
-            
+
             query.setString(1, ISBN);
-            
+
             ResultSet result = query.executeQuery();
-            
+
             return result.next();
-            
+
         } catch (SQLException ex) {
-            
+
             Logger.getLogger(LivroDAODB.class.getName()).log(Level.SEVERE, null, ex);
-        
+
         }
-        
+
         return false;
-    
+
     }
 
 }

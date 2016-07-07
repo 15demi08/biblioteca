@@ -2,6 +2,13 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/Users/demetrius/Documents/NetBeansProjects/Biblioteca/Biblioteca/src/biblioteca/GUI/livro/Livros.java</file>
+            <file>file:/C:/Users/demetrius/Documents/NetBeansProjects/Biblioteca/Biblioteca/src/biblioteca/GUI/movimentacao/fluxoRetirada/NovaRetirada.java</file>
+            <file>file:/C:/Users/demetrius/Documents/NetBeansProjects/Biblioteca/Biblioteca/src/biblioteca/modelos/LivroTableModel.java</file>
+            <file>file:/C:/Users/demetrius/Documents/NetBeansProjects/Biblioteca/Biblioteca/src/biblioteca/GUI/movimentacao/fluxoRetirada/MovSelecionaCliente.java</file>
+            <file>file:/C:/Users/demetrius/Documents/NetBeansProjects/Biblioteca/Biblioteca/src/biblioteca/GUI/movimentacao/DetalhesMovimentacao.java</file>
+            <file>file:/C:/Users/demetrius/Documents/NetBeansProjects/Biblioteca/Biblioteca/src/biblioteca/GUI/movimentacao/Movimentacoes.java</file>
+        </group>
     </open-files>
 </project-private>

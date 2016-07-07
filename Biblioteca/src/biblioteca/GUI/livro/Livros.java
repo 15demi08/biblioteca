@@ -4,12 +4,12 @@
  * Demétrius Jr. (github.com/15demi08)
  *
  */
-package biblioteca.GUI.cliente;
+package biblioteca.GUI.livro;
 
 import biblioteca.Biblioteca;
-import biblioteca.DAO.ClienteDAODB;
-import biblioteca.modelos.Cliente;
-import biblioteca.modelos.ClienteTableModel;
+import biblioteca.DAO.LivroDAODB;
+import biblioteca.modelos.Livro;
+import biblioteca.modelos.LivroTableModel;
 import biblioteca.utilidades.MSG;
 import java.util.ArrayList;
 
@@ -17,32 +17,35 @@ import java.util.ArrayList;
  *
  * @author demetrius
  */
-public class Clientes extends javax.swing.JFrame {
+public class Livros extends javax.swing.JFrame {
 
-    private ClienteTableModel ctm = new ClienteTableModel();
+    private LivroTableModel ltm = new LivroTableModel();
 
-    public Clientes() {
+    /**
+     * Creates new form Livros
+     */
+    public Livros() {
         atualizarDados();
         initComponents();
         redimensionaLarguraColunas();
     }
 
     /**
-     * Preenche (ou atualiza) a tabela de Clientes com os dados da base
-     */
-    public final void atualizarDados() {
-        ArrayList<Cliente> clientes = new ClienteDAODB().listarTodosClientes();
-        ctm.setDados(clientes);
-    }
-    
-    /**
      * Auto-Explicativo
      */
-    public final void redimensionaLarguraColunas(){
-        tabelaClientes.getColumnModel().getColumn(0).setPreferredWidth(30);
-        tabelaClientes.getColumnModel().getColumn(1).setPreferredWidth(80);
-        tabelaClientes.getColumnModel().getColumn(2).setPreferredWidth(244);
-        tabelaClientes.getColumnModel().getColumn(3).setPreferredWidth(120);
+    public final void redimensionaLarguraColunas() {
+        tabelaLivros.getColumnModel().getColumn(0).setPreferredWidth(30);
+        tabelaLivros.getColumnModel().getColumn(1).setPreferredWidth(80);
+        tabelaLivros.getColumnModel().getColumn(2).setPreferredWidth(294);
+        tabelaLivros.getColumnModel().getColumn(3).setPreferredWidth(70);
+    }
+
+    /**
+     * Preenche (ou atualiza) a tabela de Livros com os dados da base
+     */
+    public final void atualizarDados() {
+        ArrayList<Livro> dados = new LivroDAODB().listarTodosLivros();
+        ltm.setDados(dados);
     }
 
     /**
@@ -54,20 +57,17 @@ public class Clientes extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        tituloJanela = new javax.swing.JLabel();
         painelLista = new javax.swing.JPanel();
-        tabelaClientesContainer = new javax.swing.JScrollPane();
-        tabelaClientes = new javax.swing.JTable();
+        tabelaLivrosContainer = new javax.swing.JScrollPane();
+        tabelaLivros = new javax.swing.JTable();
         painelControles = new javax.swing.JPanel();
+        btnVoltar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
         btnNovo = new javax.swing.JButton();
-        btnVerMovs = new javax.swing.JButton();
-        btnVoltar = new javax.swing.JButton();
-        tituloJanela = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Biblioteca - Clientes");
-        setResizable(false);
         addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 cancelarSelecao(evt);
@@ -79,53 +79,30 @@ public class Clientes extends javax.swing.JFrame {
             }
         });
 
-        tabelaClientes.setModel(ctm);
-        tabelaClientes.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        tabelaClientes.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        tabelaClientes.setShowVerticalLines(false);
-        tabelaClientes.addMouseListener(new java.awt.event.MouseAdapter() {
+        tituloJanela.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        tituloJanela.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        tituloJanela.setText("Livros");
+
+        tabelaLivros.setModel(ltm);
+        tabelaLivros.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        tabelaLivros.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tabelaLivros.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 selecionarItem(evt);
             }
         });
-        tabelaClientesContainer.setViewportView(tabelaClientes);
+        tabelaLivrosContainer.setViewportView(tabelaLivros);
 
         javax.swing.GroupLayout painelListaLayout = new javax.swing.GroupLayout(painelLista);
         painelLista.setLayout(painelListaLayout);
         painelListaLayout.setHorizontalGroup(
             painelListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tabelaClientesContainer)
+            .addComponent(tabelaLivrosContainer, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
         );
         painelListaLayout.setVerticalGroup(
             painelListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tabelaClientesContainer, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
+            .addComponent(tabelaLivrosContainer, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
         );
-
-        btnExcluir.setText("Excluir");
-        btnExcluir.setEnabled(false);
-        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                excluirCliente(evt);
-            }
-        });
-
-        btnEditar.setText("Editar");
-        btnEditar.setEnabled(false);
-        btnEditar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editarCliente(evt);
-            }
-        });
-
-        btnNovo.setText("Novo");
-        btnNovo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cadastrarCliente(evt);
-            }
-        });
-
-        btnVerMovs.setText("Visualizar Movimentações");
-        btnVerMovs.setEnabled(false);
 
         btnVoltar.setText("Voltar");
         btnVoltar.addActionListener(new java.awt.event.ActionListener() {
@@ -134,59 +111,75 @@ public class Clientes extends javax.swing.JFrame {
             }
         });
 
+        btnExcluir.setText("Excluir");
+        btnExcluir.setEnabled(false);
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                excluirLivro(evt);
+            }
+        });
+
+        btnEditar.setText("Editar");
+        btnEditar.setEnabled(false);
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editarLivro(evt);
+            }
+        });
+
+        btnNovo.setText("Novo");
+        btnNovo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cadastrarLivro(evt);
+            }
+        });
+
         javax.swing.GroupLayout painelControlesLayout = new javax.swing.GroupLayout(painelControles);
         painelControles.setLayout(painelControlesLayout);
         painelControlesLayout.setHorizontalGroup(
             painelControlesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelControlesLayout.createSequentialGroup()
+            .addGroup(painelControlesLayout.createSequentialGroup()
                 .addComponent(btnVoltar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnNovo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnEditar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnExcluir)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnVerMovs))
+                .addComponent(btnExcluir))
         );
         painelControlesLayout.setVerticalGroup(
             painelControlesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelControlesLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(painelControlesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnVoltar)
                     .addComponent(btnExcluir)
                     .addComponent(btnEditar)
-                    .addComponent(btnNovo)
-                    .addComponent(btnVerMovs)
-                    .addComponent(btnVoltar))
+                    .addComponent(btnNovo))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        tituloJanela.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        tituloJanela.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        tituloJanela.setText("Clientes");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(tituloJanela, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(painelControles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(13, 13, 13)
-                        .addComponent(tituloJanela, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 212, Short.MAX_VALUE))
-                    .addComponent(painelLista, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(painelLista, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(painelControles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(tituloJanela, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(painelLista, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(painelControles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -197,76 +190,8 @@ public class Clientes extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * "Exclui" o cliente selecionado na base
-     * @param evt
-     */
-    private void excluirCliente(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_excluirCliente
-
-        ClienteDAODB db = new ClienteDAODB();
-        Cliente cliente = ctm.getCliente(tabelaClientes.getSelectedRow());
-
-        if (MSG.confirm(this, "Deseja realmente excluir?")) {
-
-            if (db.deletar(cliente.getId())) {
-
-                MSG.show(this, "Cliente excluido com sucesso!");
-                atualizarDados();
-
-            } else {
-
-                MSG.show(this, "Falha na exclusão do cliente.");
-
-            }
-
-        }
-
-    }//GEN-LAST:event_excluirCliente
-
-    /**
-     * Disparado quando o usuário seleciona um item na tabela
-     * @param evt O Evento gerado.
-     */
-    private void selecionarItem(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selecionarItem
-        btnEditar.setEnabled(true);
-        btnExcluir.setEnabled(true);
-        btnVerMovs.setEnabled(true);
-    }//GEN-LAST:event_selecionarItem
-
-    /**
-     * Disparado quando o usuário clica fora da tabela
-     * @param evt O Evento gerado.
-     */
-    private void cancelarSelecao(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelarSelecao
-        btnEditar.setEnabled(false);
-        btnExcluir.setEnabled(false);
-        btnVerMovs.setEnabled(false);
-        tabelaClientes.clearSelection();
-    }//GEN-LAST:event_cancelarSelecao
-
-    /**
-     * Inicializa a interface para editar um cliente
-     * @param evt
-     */
-    private void editarCliente(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarCliente
-        Cliente cliente = ctm.getCliente(tabelaClientes.getSelectedRow());
-        java.awt.EventQueue.invokeLater(() -> {
-            new AlterarCliente(cliente, this).setVisible(true);
-        });
-    }//GEN-LAST:event_editarCliente
-
-    /**
-     * Inicializa a interface para cadastrar um cliente
-     * @param evt
-     */
-    private void cadastrarCliente(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastrarCliente
-        java.awt.EventQueue.invokeLater(() -> {
-            new CadastrarCliente(this).setVisible(true);
-        });
-    }//GEN-LAST:event_cadastrarCliente
-
-    /**
      * Disparado quando o usuário fecha a janela ou clica em "Voltar"
-     * @param evt 
+     * @param evt
      */
     private void menuPrincipal(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_menuPrincipal
         java.awt.EventQueue.invokeLater(() -> {
@@ -276,22 +201,86 @@ public class Clientes extends javax.swing.JFrame {
 
     /**
      * Fecha a janela, causando o disparo do método "menuPrincipal"
-     * @param evt 
+     * @param evt
      */
     private void voltarMenuPrincipal(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_voltarMenuPrincipal
         this.dispose();
     }//GEN-LAST:event_voltarMenuPrincipal
 
+    /**
+     * Inicializa a interface para cadastro de um novo livro
+     * @param evt 
+     */
+    private void cadastrarLivro(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastrarLivro
+        java.awt.EventQueue.invokeLater(() -> {
+            new CadastrarLivro(this).setVisible(true);
+        });
+    }//GEN-LAST:event_cadastrarLivro
+
+    /**
+     * Disparado quando o usuário clica fora da tabela
+     * @param evt O Evento gerado.
+     */
+    private void cancelarSelecao(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelarSelecao
+        btnEditar.setEnabled(false);
+        btnExcluir.setEnabled(false);
+        tabelaLivros.clearSelection();
+    }//GEN-LAST:event_cancelarSelecao
+
+    /**
+     * Disparado quando o usuário seleciona um item na tabela
+     * @param evt O Evento gerado.
+     */
+    private void selecionarItem(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selecionarItem
+        btnEditar.setEnabled(true);
+        btnExcluir.setEnabled(true);
+    }//GEN-LAST:event_selecionarItem
+
+    /**
+     * Inicializa a interface para editar um livro
+     * @param evt
+     */
+    private void editarLivro(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarLivro
+        Livro livro = ltm.getLivro(tabelaLivros.getSelectedRow());
+        java.awt.EventQueue.invokeLater(() -> {
+            new AlterarLivro(livro, this).setVisible(true);
+        });
+    }//GEN-LAST:event_editarLivro
+
+    /**
+     * "Exclui" o livro selecionado na base
+     * @param evt
+     */
+    private void excluirLivro(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_excluirLivro
+        LivroDAODB db = new LivroDAODB();
+        Livro livro = ltm.getLivro(tabelaLivros.getSelectedRow());
+
+        if (MSG.confirm(this, "Deseja realmente excluir?")) {
+
+            if (db.deletar(livro.getId())) {
+
+                MSG.show(this, "Livro excluido com sucesso!");
+                atualizarDados();
+
+            } else {
+
+                MSG.show(this, "Falha na exclusão do livro.");
+
+            }
+
+        }
+    }//GEN-LAST:event_excluirLivro
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnNovo;
-    private javax.swing.JButton btnVerMovs;
     private javax.swing.JButton btnVoltar;
     private javax.swing.JPanel painelControles;
     private javax.swing.JPanel painelLista;
-    private javax.swing.JTable tabelaClientes;
-    private javax.swing.JScrollPane tabelaClientesContainer;
+    private javax.swing.JTable tabelaLivros;
+    private javax.swing.JScrollPane tabelaLivrosContainer;
     private javax.swing.JLabel tituloJanela;
     // End of variables declaration//GEN-END:variables
+
 }
