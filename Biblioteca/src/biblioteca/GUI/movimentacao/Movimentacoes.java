@@ -184,7 +184,7 @@ public class Movimentacoes extends javax.swing.JFrame {
 
     private void novaMovimentacao(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_novaMovimentacao
         java.awt.EventQueue.invokeLater(() -> {
-            new NovaRetirada().setVisible(true);
+            new NovaRetirada(this).setVisible(true);
         });
     }//GEN-LAST:event_novaMovimentacao
 

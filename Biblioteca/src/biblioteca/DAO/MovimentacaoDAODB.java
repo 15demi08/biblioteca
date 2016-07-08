@@ -65,20 +65,11 @@ public class MovimentacaoDAODB implements MovimentacaoDAO {
                     return 0;
                 }
 
-                ArrayList<MovLivro> livros = obj.getMovLivros();
+                ArrayList<MovLivro> movLivros = obj.getMovLivros();;
 
-                String sqlMovLivros = "INSERT INTO movLivro (idMovimentacao, idLivro) VALUES (?, ?)";
+                for (MovLivro movLivro : movLivros) {
 
-                PreparedStatement queryMovLivros = conexao.prepareStatement(sqlMovLivros);
-
-                for (MovLivro livro : livros) {
-
-                    livroDB.movimentar(livro.getLivro().getId(), false);
-
-                    queryMovLivros.setInt(1, idMov);
-                    queryMovLivros.setInt(2, livro.getId());
-
-                    int executeUpdate = queryMovLivros.executeUpdate();
+                    new MovLivroDAODB().inserir(idMov, movLivro.getLivro());
 
                 }
 
@@ -87,7 +78,15 @@ public class MovimentacaoDAODB implements MovimentacaoDAO {
             }
 
         } catch (SQLException ex) {
+            
             Logger.getLogger(MovimentacaoDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            
+        } finally {
+            try {            
+                conexao.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return 0;
@@ -130,7 +129,15 @@ public class MovimentacaoDAODB implements MovimentacaoDAO {
             return movimentacao;
 
         } catch (SQLException ex) {
+            
             Logger.getLogger(MovimentacaoDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            
+        } finally {
+            try {            
+                conexao.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return null;
@@ -176,7 +183,15 @@ public class MovimentacaoDAODB implements MovimentacaoDAO {
             return movimentacoes;
 
         } catch (SQLException ex) {
+            
             Logger.getLogger(MovimentacaoDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            
+        } finally {
+            try {            
+                conexao.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return null;

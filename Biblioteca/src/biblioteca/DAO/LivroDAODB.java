@@ -62,6 +62,12 @@ public class LivroDAODB implements LivroDAO {
 
             Logger.getLogger(LivroDAODB.class.getName()).log(Level.SEVERE, null, ex);
 
+        } finally {
+            try {            
+                conexao.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return null;
@@ -92,12 +98,21 @@ public class LivroDAODB implements LivroDAO {
 
             if (query.executeUpdate() > 0) {
                 return true;
+            } else {
+                return false;
+                
             }
 
         } catch (SQLException ex) {
 
             Logger.getLogger(LivroDAODB.class.getName()).log(Level.SEVERE, null, ex);
 
+        } finally {
+            try {            
+                conexao.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return false;
@@ -129,6 +144,12 @@ public class LivroDAODB implements LivroDAO {
 
             Logger.getLogger(LivroDAODB.class.getName()).log(Level.SEVERE, null, ex);
 
+        } finally {
+            try {            
+                conexao.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return false;
@@ -172,6 +193,12 @@ public class LivroDAODB implements LivroDAO {
 
             Logger.getLogger(LivroDAODB.class.getName()).log(Level.SEVERE, null, ex);
 
+        } finally {
+            try {            
+                conexao.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return 0;
@@ -222,6 +249,12 @@ public class LivroDAODB implements LivroDAO {
 
             Logger.getLogger(LivroDAODB.class.getName()).log(Level.SEVERE, null, ex);
 
+        } finally {
+            try {            
+                conexao.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return null;
@@ -256,6 +289,12 @@ public class LivroDAODB implements LivroDAO {
 
             Logger.getLogger(LivroDAODB.class.getName()).log(Level.SEVERE, null, ex);
 
+        } finally {
+            try {            
+                conexao.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return false;
@@ -302,6 +341,12 @@ public class LivroDAODB implements LivroDAO {
 
             Logger.getLogger(LivroDAODB.class.getName()).log(Level.SEVERE, null, ex);
 
+        } finally {
+            try {            
+                conexao.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return null;
@@ -348,6 +393,12 @@ public class LivroDAODB implements LivroDAO {
 
             Logger.getLogger(LivroDAODB.class.getName()).log(Level.SEVERE, null, ex);
 
+        } finally {
+            try {            
+                conexao.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return null;
@@ -372,10 +423,36 @@ public class LivroDAODB implements LivroDAO {
 
             Logger.getLogger(LivroDAODB.class.getName()).log(Level.SEVERE, null, ex);
 
+        } finally {
+            try {            
+                conexao.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return false;
 
+    }
+
+    /**
+     * Retorna os livros que contiverem em seu titulo a string especificada, ou null
+     * se nenhum livro se encaixar no critério
+     * @param titulo
+     * @return 
+     */
+    public ArrayList<Livro> pesquisarPorTitulo(String titulo) {
+        
+        String tituloLower = titulo.toLowerCase();
+        ArrayList<Livro> livros = consultaDisponiveis();
+        ArrayList<Livro> resultado = new ArrayList<>();
+        
+        livros.stream().filter((l) -> ( l.getNome().toLowerCase().contains(tituloLower) )).forEach((l) -> {
+            resultado.add(l);
+        });
+        
+        return resultado.isEmpty() ? null : resultado;
+        
     }
 
 }

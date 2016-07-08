@@ -66,6 +66,7 @@ public class Livros extends javax.swing.JFrame {
         btnExcluir = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
         btnNovo = new javax.swing.JButton();
+        btnDetalhes = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addMouseListener(new java.awt.event.MouseAdapter() {
@@ -134,6 +135,14 @@ public class Livros extends javax.swing.JFrame {
             }
         });
 
+        btnDetalhes.setText("Detalhes");
+        btnDetalhes.setEnabled(false);
+        btnDetalhes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                detalhesLivro(evt);
+            }
+        });
+
         javax.swing.GroupLayout painelControlesLayout = new javax.swing.GroupLayout(painelControles);
         painelControles.setLayout(painelControlesLayout);
         painelControlesLayout.setHorizontalGroup(
@@ -142,6 +151,8 @@ public class Livros extends javax.swing.JFrame {
                 .addComponent(btnVoltar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnNovo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnDetalhes)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnEditar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -155,7 +166,8 @@ public class Livros extends javax.swing.JFrame {
                     .addComponent(btnVoltar)
                     .addComponent(btnExcluir)
                     .addComponent(btnEditar)
-                    .addComponent(btnNovo))
+                    .addComponent(btnNovo)
+                    .addComponent(btnDetalhes))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -222,6 +234,7 @@ public class Livros extends javax.swing.JFrame {
      * @param evt O Evento gerado.
      */
     private void cancelarSelecao(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelarSelecao
+        btnDetalhes.setEnabled(false);
         btnEditar.setEnabled(false);
         btnExcluir.setEnabled(false);
         tabelaLivros.clearSelection();
@@ -232,6 +245,7 @@ public class Livros extends javax.swing.JFrame {
      * @param evt O Evento gerado.
      */
     private void selecionarItem(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selecionarItem
+        btnDetalhes.setEnabled(true);
         btnEditar.setEnabled(true);
         btnExcluir.setEnabled(true);
     }//GEN-LAST:event_selecionarItem
@@ -271,7 +285,15 @@ public class Livros extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_excluirLivro
 
+    private void detalhesLivro(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_detalhesLivro
+        Livro livro = ltm.getLivro(tabelaLivros.getSelectedRow());
+        java.awt.EventQueue.invokeLater(() -> {
+            new DetalhesLivro(livro).setVisible(true);
+        });
+    }//GEN-LAST:event_detalhesLivro
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnDetalhes;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnNovo;

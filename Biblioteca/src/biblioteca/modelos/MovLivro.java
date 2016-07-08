@@ -19,6 +19,14 @@ public class MovLivro {
     private LocalDate dataDevolucao = null;
 
     /**
+     * Cria uma movimentação de livro apenas com o livro, para inserção na base.
+     * @param livro 
+     */
+    public MovLivro(Livro livro) {
+        this.livro = livro;
+    }
+    
+    /**
      * Cria uma movimentação de Livro sem ID e sem Data de Devolução,
      * para inserção na base de dados
      * @param idMovimentacao

@@ -27,6 +27,11 @@ public class ClienteDAODB implements ClienteDAO {
 
     }
 
+    /**
+     * Retrorna um ArrayList com todos od clientes ativos na base de dados
+     *
+     * @return
+     */
     @Override
     public ArrayList<Cliente> listarTodosClientes() {
 
@@ -43,12 +48,62 @@ public class ClienteDAODB implements ClienteDAO {
             while (result.next()) {
 
                 resultado.add(
-                    new Cliente(
-                        result.getInt("id"),
-                        result.getString("nome"),
-                        result.getString("telefone"),
-                        result.getString("cpf")
-                    )
+                        new Cliente(
+                                result.getInt("id"),
+                                result.getString("nome"),
+                                result.getString("telefone"),
+                                result.getString("cpf")
+                        )
+                );
+
+            }
+
+            return resultado;
+
+        } catch (SQLException ex) {
+
+            Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+
+        } finally {
+            try {
+                conexao.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return null;
+
+    }
+
+    /*
+    public ArrayList<Cliente> pesquisarPorNome(String nome) {
+
+        ArrayList<Cliente> resultado = new ArrayList<>();
+
+        try {
+
+            String nomeSql = "%" + nome + "%";
+    
+            // Erro aqui:
+            // "Não pode utilizar métodos de consulta que pegam uma consulta de um comando preparado." (?_?)
+            String sql = "SELECT * FROM cliente WHERE status = true AND nome ILIKE ? ORDER BY id";
+
+            PreparedStatement query = conexao.prepareStatement(sql);
+
+            query.setString(1, nomeSql);
+
+            ResultSet result = query.executeQuery(sql);
+
+            while (result.next()) {
+
+                resultado.add(
+                        new Cliente(
+                                result.getInt("id"),
+                                result.getString("nome"),
+                                result.getString("telefone"),
+                                result.getString("cpf")
+                        )
                 );
 
             }
@@ -64,46 +119,26 @@ public class ClienteDAODB implements ClienteDAO {
         return null;
 
     }
-    
-    public ArrayList<Cliente> pesquisarPorNome( String nome ){
-        
+     */
+    /**
+     * Retorna os clientes que em seu nome contiverem a string especificada, ou
+     * null se nenhum cliente se encaixar no critério
+     *
+     * @param nome
+     * @return
+     */
+    public ArrayList<Cliente> pesquisarPorNome(String nome) {
+
+        String nomeLower = nome.toLowerCase();
+        ArrayList<Cliente> clientes = listarTodosClientes();
         ArrayList<Cliente> resultado = new ArrayList<>();
 
-        try {
+        clientes.stream().filter((c) -> (c.getNome().toLowerCase().contains(nomeLower))).forEach((c) -> {
+            resultado.add(c);
+        });
 
-            nome = "%" + nome + "%";
-            
-            String sql = "SELECT * FROM cliente WHERE status = true AND nome ILIKE ? ORDER BY id";
+        return resultado.isEmpty() ? null : resultado;
 
-            PreparedStatement query = conexao.prepareStatement(sql);
-            
-            query.setString(1, nome);
-
-            ResultSet result = query.executeQuery(sql);
-
-            while (result.next()) {
-
-                resultado.add(
-                    new Cliente(
-                        result.getInt("id"),
-                        result.getString("nome"),
-                        result.getString("telefone"),
-                        result.getString("cpf")
-                    )
-                );
-
-            }
-
-            return resultado;
-
-        } catch (SQLException ex) {
-
-            Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
-
-        }
-
-        return null;
-        
     }
 
     @Override
@@ -122,12 +157,12 @@ public class ClienteDAODB implements ClienteDAO {
             while (result.next()) {
 
                 resultado.add(
-                    new Cliente(
-                        result.getInt("id"),
-                        result.getString("nome"),
-                        result.getString("telefone"),
-                        result.getString("cpf")
-                    )
+                        new Cliente(
+                                result.getInt("id"),
+                                result.getString("nome"),
+                                result.getString("telefone"),
+                                result.getString("cpf")
+                        )
                 );
 
             }
@@ -138,10 +173,16 @@ public class ClienteDAODB implements ClienteDAO {
 
             Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
 
+        } finally {
+            try {
+                conexao.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return null;
-        
+
     }
 
     /**
@@ -172,6 +213,12 @@ public class ClienteDAODB implements ClienteDAO {
 
             Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
 
+        } finally {
+            try {
+                conexao.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return false;
@@ -203,6 +250,12 @@ public class ClienteDAODB implements ClienteDAO {
 
             Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
 
+        } finally {
+            try {
+                conexao.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return false;
@@ -231,11 +284,12 @@ public class ClienteDAODB implements ClienteDAO {
             if (query.executeUpdate() > 0) {
 
                 ResultSet id = query.getGeneratedKeys();
-                
-                if(id.next())
+
+                if (id.next()) {
                     return id.getInt(1);
-                else
+                } else {
                     return 0;
+                }
 
             }
 
@@ -243,8 +297,14 @@ public class ClienteDAODB implements ClienteDAO {
 
             Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
 
+        } finally {
+            try {
+                conexao.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        
+
         return 0;
 
     }
@@ -270,21 +330,32 @@ public class ClienteDAODB implements ClienteDAO {
             ResultSet result = query.executeQuery();
 
             if (result.next()) {
-                
-                Cliente cliente = new Cliente(result.getInt("id"), result.getString("nome"), result.getString("telefone"), result.getString("cpf"));
-                
+
+                Cliente cliente = new Cliente(
+                        result.getInt("id"),
+                        result.getString("nome"),
+                        result.getString("telefone"),
+                        result.getString("cpf")
+                );
+
                 return cliente;
-                
+
             } else {
-                
+
                 return null;
-                
+
             }
 
         } catch (SQLException ex) {
 
             Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
 
+        } finally {
+            try {            
+                conexao.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return null;
@@ -293,49 +364,62 @@ public class ClienteDAODB implements ClienteDAO {
 
     @Override
     public boolean verificarCPF(String cpf) {
-    
+
         try {
-            
+
             String sql = "SELECT * FROM cliente WHERE cpf = ?";
-            
+
             PreparedStatement query = conexao.prepareStatement(sql);
-            
+
             query.setString(1, cpf);
-            
+
             ResultSet result = query.executeQuery();
-            
+
             return result.next();
-            
+
         } catch (SQLException ex) {
-            
+
             Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
-        
+
+        } finally {
+            try {            
+                conexao.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        
+
         return false;
-        
+
     }
 
     @Override
     public boolean verificarStatus(int id) {
 
         try {
-            
+
             String sql = "SELECT status FROM cliente WHERE id = ?";
-            
+
             PreparedStatement query = conexao.prepareStatement(sql);
-            
+
             query.setInt(1, id);
-            
+
             ResultSet result = query.executeQuery(sql);
-            
-            if( result.first() )
+
+            if (result.first()) {
                 return result.getBoolean("status");
-            
+            }
+
         } catch (SQLException ex) {
             Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {            
+                conexao.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        
+
         return false;
 
     }
@@ -354,12 +438,13 @@ public class ClienteDAODB implements ClienteDAO {
 
         try {
 
-            String sql =  "SELECT COUNT(ml.id) AS quant"
-                        + "FROM cliente c, movimentacao m, movlivro ml"
-                        + "WHERE c.id = ? AND "
-                        +       "ml.dataDevolucao IS NULL AND"
-                        +       "c.id = m.idCliente AND"
-                        +       "m.id = ml.idMovimentacao";
+            String sql;
+            sql = "SELECT COUNT(ml.id) AS quant "
+                    + "FROM cliente c, movimentacao m, movlivro ml "
+                    + "WHERE c.id = m.idCliente AND "
+                    + "      m.id = ml.idMovimentacao AND "
+                    + "      c.id = ? AND "
+                    + "      ml.dataDevolucao IS NULL";
 
             PreparedStatement query = conexao.prepareStatement(sql);
 
@@ -367,15 +452,22 @@ public class ClienteDAODB implements ClienteDAO {
 
             ResultSet result = query.executeQuery();
 
-            if( result.next() )
+            if (result.next()) {
                 quantidade = result.getInt("quant");
-            else
+            } else {
                 return -1;
+            }
 
         } catch (SQLException ex) {
 
             Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
 
+        } finally {
+            try {            
+                conexao.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return quantidade;

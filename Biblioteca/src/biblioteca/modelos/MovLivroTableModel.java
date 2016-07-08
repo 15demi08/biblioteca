@@ -47,12 +47,9 @@ public class MovLivroTableModel extends AbstractTableModel {
         
         ArrayList<MovLivro> pendentes = new ArrayList<>();
         
-        for( MovLivro ml : dados ){
-            
-            if( !ml.isDevolvido() )
-                pendentes.add(ml);
-            
-        }
+        dados.stream().filter((ml) -> ( !ml.isDevolvido() )).forEach((ml) -> {
+            pendentes.add(ml);
+        });
         
         return pendentes;
         

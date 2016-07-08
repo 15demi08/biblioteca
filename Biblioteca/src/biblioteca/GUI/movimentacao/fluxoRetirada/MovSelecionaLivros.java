@@ -6,9 +6,9 @@
  */
 package biblioteca.GUI.movimentacao.fluxoRetirada;
 
-import biblioteca.DAO.ClienteDAODB;
-import biblioteca.modelos.Cliente;
-import biblioteca.modelos.ClienteTableModel;
+import biblioteca.DAO.LivroDAODB;
+import biblioteca.modelos.Livro;
+import biblioteca.modelos.LivroTableModel;
 import biblioteca.utilidades.MSG;
 import java.util.ArrayList;
 
@@ -16,45 +16,49 @@ import java.util.ArrayList;
  *
  * @author demetrius
  */
-public class MovSelecionaCliente extends javax.swing.JFrame {
+public class MovSelecionaLivros extends javax.swing.JFrame {
 
-    private ClienteTableModel ctm = new ClienteTableModel();
+    private LivroTableModel ltm = new LivroTableModel();
+    private int maxSelecoes;
     private NovaRetirada parent;
 
     /**
      * Creates new form MovSelecionaCliente
      *
      * @param parent
+     * @param maxSelecoes
      */
-    public MovSelecionaCliente(NovaRetirada parent) {
+    public MovSelecionaLivros(NovaRetirada parent, int maxSelecoes) {
         this.parent = parent;
-        mostraClientes();
+        this.maxSelecoes = maxSelecoes;
+        mostraLivros();
         initComponents();
         redimensionaLarguraColunas();
+        labelSelecoesDisp.setText(String.valueOf(maxSelecoes));
     }
 
-    public final void mostraClientes() {
-        ArrayList<Cliente> clientes = new ClienteDAODB().listarTodosClientes();
-        ctm.setDados(clientes);
+    public final void mostraLivros() {
+        ArrayList<Livro> livros = new LivroDAODB().consultaDisponiveis();
+        ltm.setDados(livros);
     }
 
-    public final void mostraClientes(String nome) {
+    public final void mostraLivros(String titulo) {
 
-        ArrayList<Cliente> clientes = new ClienteDAODB().pesquisarPorNome(nome);
+        ArrayList<Livro> livros = new LivroDAODB().pesquisarPorTitulo(titulo);
 
-        if (clientes == null) {
-            MSG.show(this, "Nenhum cliente encontrado!");
+        if (livros == null) {
+            MSG.show(this, "Nenhum livro encontrado!");
         } else {
-            ctm.setDados(clientes);
+            ltm.setDados(livros);
         }
 
     }
 
     private void redimensionaLarguraColunas() {
-        tabelaClientes.getColumnModel().getColumn(0).setPreferredWidth(20);
-        tabelaClientes.getColumnModel().getColumn(1).setPreferredWidth(30);
-        tabelaClientes.getColumnModel().getColumn(2).setPreferredWidth(230);
-        tabelaClientes.getColumnModel().getColumn(3).setPreferredWidth(100);
+        tabelaLivros.getColumnModel().getColumn(0).setPreferredWidth(20);
+        tabelaLivros.getColumnModel().getColumn(1).setPreferredWidth(30);
+        tabelaLivros.getColumnModel().getColumn(2).setPreferredWidth(230);
+        tabelaLivros.getColumnModel().getColumn(3).setPreferredWidth(100);
     }
 
     /**
@@ -74,10 +78,12 @@ public class MovSelecionaCliente extends javax.swing.JFrame {
         labelNome = new javax.swing.JLabel();
         painelLista = new javax.swing.JPanel();
         tabelaContainer = new javax.swing.JScrollPane();
-        tabelaClientes = new javax.swing.JTable();
+        tabelaLivros = new javax.swing.JTable();
         painelControles = new javax.swing.JPanel();
         btnCancelar = new javax.swing.JButton();
         btnOK = new javax.swing.JButton();
+        labelTxtSelecoesDisp = new javax.swing.JLabel();
+        labelSelecoesDisp = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addMouseListener(new java.awt.event.MouseAdapter() {
@@ -88,30 +94,30 @@ public class MovSelecionaCliente extends javax.swing.JFrame {
 
         tituloJanela.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         tituloJanela.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        tituloJanela.setText("Selecionar Cliente");
+        tituloJanela.setText("Selecionar Livros");
 
         btnVerTodos.setText("Ver Todos");
         btnVerTodos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                verTodosClientes(evt);
+                verTodosLivros(evt);
             }
         });
 
         btnPesquisar.setText("Pesquisar");
         btnPesquisar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pesquisaCliente(evt);
+                pesquisaLivros(evt);
             }
         });
 
-        labelNome.setText("Nome");
+        labelNome.setText("Título");
 
         javax.swing.GroupLayout painelDadosLayout = new javax.swing.GroupLayout(painelDados);
         painelDados.setLayout(painelDadosLayout);
         painelDadosLayout.setHorizontalGroup(
             painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelDadosLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(11, Short.MAX_VALUE)
                 .addComponent(labelNome)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -129,13 +135,14 @@ public class MovSelecionaCliente extends javax.swing.JFrame {
                 .addComponent(labelNome))
         );
 
-        tabelaClientes.setModel(ctm);
-        tabelaClientes.addMouseListener(new java.awt.event.MouseAdapter() {
+        tabelaLivros.setModel(ltm);
+        tabelaLivros.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        tabelaLivros.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 selecionarItem(evt);
             }
         });
-        tabelaContainer.setViewportView(tabelaClientes);
+        tabelaContainer.setViewportView(tabelaLivros);
 
         javax.swing.GroupLayout painelListaLayout = new javax.swing.GroupLayout(painelLista);
         painelLista.setLayout(painelListaLayout);
@@ -161,27 +168,36 @@ public class MovSelecionaCliente extends javax.swing.JFrame {
         btnOK.setEnabled(false);
         btnOK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                confirmarCliente(evt);
+                confirmarLivros(evt);
             }
         });
+
+        labelTxtSelecoesDisp.setText("Número máximo permitido: ");
+
+        labelSelecoesDisp.setText("0");
 
         javax.swing.GroupLayout painelControlesLayout = new javax.swing.GroupLayout(painelControles);
         painelControles.setLayout(painelControlesLayout);
         painelControlesLayout.setHorizontalGroup(
             painelControlesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelControlesLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(labelTxtSelecoesDisp)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelSelecoesDisp, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnOK)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCancelar))
         );
         painelControlesLayout.setVerticalGroup(
             painelControlesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelControlesLayout.createSequentialGroup()
+            .addGroup(painelControlesLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(painelControlesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancelar)
-                    .addComponent(btnOK))
+                    .addComponent(btnOK)
+                    .addComponent(labelTxtSelecoesDisp)
+                    .addComponent(labelSelecoesDisp))
                 .addContainerGap())
         );
 
@@ -219,29 +235,35 @@ public class MovSelecionaCliente extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void pesquisaCliente(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesquisaCliente
-        mostraClientes(txtNome.getText());
-    }//GEN-LAST:event_pesquisaCliente
+    private void pesquisaLivros(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesquisaLivros
+        mostraLivros(txtNome.getText());
+    }//GEN-LAST:event_pesquisaLivros
 
-    private void verTodosClientes(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verTodosClientes
-        mostraClientes();
-    }//GEN-LAST:event_verTodosClientes
+    private void verTodosLivros(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verTodosLivros
+        mostraLivros();
+    }//GEN-LAST:event_verTodosLivros
 
-    private void confirmarCliente(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmarCliente
-
-        Cliente cliente = ctm.getCliente(tabelaClientes.getSelectedRow());
-        ClienteDAODB clienteDB = new ClienteDAODB();
-
-        int nroEmprestimos = clienteDB.verificarNroEmprestimos(cliente.getId());
-
-        if (nroEmprestimos < 3) {
-            parent.receberCliente(cliente, (3 - nroEmprestimos));
-            this.dispose();
+    private void confirmarLivros(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmarLivros
+        
+        ArrayList<Livro> livros = new ArrayList<>();
+        
+        if( tabelaLivros.getSelectedRowCount() > maxSelecoes ){
+            
+            MSG.show(this, "Número de livros extrapola o máximo permitido para este cliente: " + maxSelecoes + ".");
+            
         } else {
-            MSG.show(this, "Cliente já possui o número máximo de empréstimos pendentes!");
+            
+            for( int linha : tabelaLivros.getSelectedRows() ){
+                livros.add(ltm.getLivro(linha));
+            }
+            
+            parent.receberLivros(livros);
+        
+            this.dispose();
+            
         }
 
-    }//GEN-LAST:event_confirmarCliente
+    }//GEN-LAST:event_confirmarLivros
 
     private void fecharJanela(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fecharJanela
         this.dispose();
@@ -253,7 +275,7 @@ public class MovSelecionaCliente extends javax.swing.JFrame {
 
     private void cancelarSelecao(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelarSelecao
         btnOK.setEnabled(false);
-        tabelaClientes.clearSelection();
+        tabelaLivros.clearSelection();
     }//GEN-LAST:event_cancelarSelecao
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -262,11 +284,13 @@ public class MovSelecionaCliente extends javax.swing.JFrame {
     private javax.swing.JButton btnPesquisar;
     private javax.swing.JButton btnVerTodos;
     private javax.swing.JLabel labelNome;
+    private javax.swing.JLabel labelSelecoesDisp;
+    private javax.swing.JLabel labelTxtSelecoesDisp;
     private javax.swing.JPanel painelControles;
     private javax.swing.JPanel painelDados;
     private javax.swing.JPanel painelLista;
-    private javax.swing.JTable tabelaClientes;
     private javax.swing.JScrollPane tabelaContainer;
+    private javax.swing.JTable tabelaLivros;
     private javax.swing.JLabel tituloJanela;
     private javax.swing.JTextField txtNome;
     // End of variables declaration//GEN-END:variables

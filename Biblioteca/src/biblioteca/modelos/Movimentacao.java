@@ -18,7 +18,7 @@ public class Movimentacao {
     /**
      * Cria uma movimentação sem id, para inserção na base
      * @param cliente
-     * @param livros
+     * @param movLivros
      */
     public Movimentacao(Cliente cliente, ArrayList<MovLivro> movLivros) {
         this.cliente = cliente;

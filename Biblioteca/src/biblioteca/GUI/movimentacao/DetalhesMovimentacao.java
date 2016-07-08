@@ -19,15 +19,15 @@ import java.util.ArrayList;
  * @author demetrius
  */
 public class DetalhesMovimentacao extends javax.swing.JFrame {
-    
+
     Movimentacoes parent;
     Movimentacao movimentacao;
     MovLivroTableModel mltm;
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/uuuu");
-    MovLivroDAODB movLivroDB = new MovLivroDAODB();
 
     /**
      * Creates new form DetalhesMovimentacao
+     *
      * @param movimentacao
      * @param parent
      */
@@ -39,34 +39,33 @@ public class DetalhesMovimentacao extends javax.swing.JFrame {
         initComponents();
         redimensionaLarguraColunas();
     }
-    
-    
+
     private void redimensionaLarguraColunas() {
         tabelaMovs.getColumnModel().getColumn(0).setPreferredWidth(300);
         tabelaMovs.getColumnModel().getColumn(1).setPreferredWidth(120);
         tabelaMovs.getColumnModel().getColumn(2).setPreferredWidth(80);
     }
-    
-    public void atualizarListaMovLivros(){
-        
+
+    public void atualizarListaMovLivros() {
+
         // Recarrega da base a lista de livros da mov. atual
-        ArrayList<MovLivro> movLivros = movLivroDB.listarPorMovimentacao(movimentacao.getId());
-        
+        ArrayList<MovLivro> movLivros = new MovLivroDAODB().listarPorMovimentacao(movimentacao.getId());
+
         // Passa para o objeto de mov. a nova lista de livros
         movimentacao.setMovLivros(movLivros);
-        
+
         // Atualiza a tabela de livros
         mltm.setDados(movLivros);
-        
+
         // Atualiza o texto da label de status
         labelStatus.setText(setStatusTxt());
-        
+
         // Atualiza, na tela principal a tabela de movs., para que já contenha os dados atualizados
         parent.atualizarDados();
-        
+
     }
-    
-    public String setStatusTxt(){
+
+    public String setStatusTxt() {
         return movimentacao.verificarTodosDevolvidos() ? "Concluída" : "Pendente";
     }
 
@@ -282,57 +281,65 @@ public class DetalhesMovimentacao extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelarSelecao
 
     private void selecionarItem(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selecionarItem
-        if(!mltm.getMovLivro(tabelaMovs.getSelectedRow()).isDevolvido())
+        if (!mltm.getMovLivro(tabelaMovs.getSelectedRow()).isDevolvido()) {
             btnDevolver.setEnabled(true);
+        }
     }//GEN-LAST:event_selecionarItem
 
     private void devolverLivro(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_devolverLivro
-        
+
         MovLivro movLivro = mltm.getMovLivro(tabelaMovs.getSelectedRow());
-        
+
         /*Console.println("idMovLivro: " + movLivro.getId() + "\n"
         + "idMovimentacao: " + movLivro.getIdMovimentacao() + "\n"
         + "idLivro: " + movLivro.getLivro().getId());*/
-        
-        if(!movLivroDB.devolver(movLivro)){
-        
+        if (!new MovLivroDAODB().devolver(movLivro)) {
+
             MSG.show(this, "Erro na devolução do Livro.");
-        
+
         } else {
-        
+
             MSG.show(this, "Livro devolvido com sucesso!");
             atualizarListaMovLivros();
-        
+
         }
-        
+
     }//GEN-LAST:event_devolverLivro
 
     private void devolverTodosPendentes(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_devolverTodosPendentes
-        
+
         ArrayList<MovLivro> pendentes = mltm.getPendentes();
-        
-        String out = "Falha na devolução dos seguintes livros:\n";
-        boolean teste = true;
-        
-        for( MovLivro ml : pendentes ){
-            
-            if(!movLivroDB.devolver(ml)){
-        
-                out += ml.getLivro().getISBN() + " - " + ml.getLivro().getNome();
-                teste = false;
+
+        if (pendentes.isEmpty()) {
+
+            MSG.show(this, "Não há livro pendentes a devolver!");
+
+        } else {
+
+            String out = "Falha na devolução dos seguintes livros:\n";
+            boolean teste = true;
+
+            for (MovLivro ml : pendentes) {
+
+                if (!new MovLivroDAODB().devolver(ml)) {
+
+                    out += ml.getLivro().getISBN() + " - " + ml.getLivro().getNome();
+                    teste = false;
+
+                }
 
             }
-            
+
+            if (teste) {
+                out = "Todos os livros devolvidos com sucesso!";
+            }
+
+            MSG.show(this, out);
+
+            atualizarListaMovLivros();
+
         }
-        
-        if(teste){
-            out = "Todos os livros devolvidos com sucesso!";            
-        }
-        
-        MSG.show(this, out);
-        
-        atualizarListaMovLivros();
-        
+
     }//GEN-LAST:event_devolverTodosPendentes
 
 

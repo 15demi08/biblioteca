@@ -61,6 +61,12 @@ public class MovLivroDAODB implements DAO<MovLivro> {
             
         } catch (SQLException ex) {
             Logger.getLogger(MovLivroDAODB.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {            
+                conexao.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
         return null;
@@ -81,6 +87,8 @@ public class MovLivroDAODB implements DAO<MovLivro> {
             
             if( query.executeUpdate() > 0 ){
                 
+                boolean movimentar = new LivroDAODB().movimentar(obj.getLivro().getId(), false);
+                
                 ResultSet id = query.getGeneratedKeys();
                 
                 if( id.next() )
@@ -90,6 +98,12 @@ public class MovLivroDAODB implements DAO<MovLivro> {
             
         } catch (SQLException ex) {
             Logger.getLogger(MovLivroDAODB.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {            
+                conexao.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
         return 0;
@@ -128,6 +142,12 @@ public class MovLivroDAODB implements DAO<MovLivro> {
             
         } catch (SQLException ex) {
             Logger.getLogger(MovLivroDAODB.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {            
+                conexao.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
         return false;
@@ -168,7 +188,15 @@ public class MovLivroDAODB implements DAO<MovLivro> {
             return movLivros;
             
         } catch (SQLException ex) {
+            
             Logger.getLogger(MovLivroDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            
+        } finally {
+            try {            
+                conexao.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ClienteDAODB.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
         return null;

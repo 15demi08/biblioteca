@@ -6,9 +6,17 @@
  */
 package biblioteca.GUI.movimentacao.fluxoRetirada;
 
+import biblioteca.DAO.MovimentacaoDAODB;
+import biblioteca.GUI.movimentacao.Movimentacoes;
+import biblioteca.modelos.Cliente;
+import biblioteca.modelos.Livro;
+import biblioteca.modelos.LivroTableModel;
+import biblioteca.modelos.MovLivro;
+import biblioteca.modelos.Movimentacao;
+import biblioteca.utilidades.MSG;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-
+import java.util.ArrayList;
 
 /**
  *
@@ -17,15 +25,19 @@ import java.time.format.DateTimeFormatter;
 public class NovaRetirada extends javax.swing.JFrame {
 
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/uuuu");
+    LivroTableModel ltm = new LivroTableModel();
     LocalDate dataPrevistaDevolucao = LocalDate.now().plusDays(7);
-    
+    private Cliente cliente;
+    private int nroEmprestimosRestantes;
+    private Movimentacoes parent;
+
     /**
      * Creates new form NovaRetirada
+     * @param parent
      */
-    public NovaRetirada() {
+    public NovaRetirada(Movimentacoes parent) {
+        this.parent = parent;
         initComponents();
-        labelDataRetirada.setText(LocalDate.now().format(dtf));
-        labelDevPrev.setText(dataPrevistaDevolucao.format(dtf));
     }
 
     /**
@@ -51,8 +63,10 @@ public class NovaRetirada extends javax.swing.JFrame {
         labelDataRetirada = new javax.swing.JLabel();
         labelTxtDevPrev = new javax.swing.JLabel();
         labelDevPrev = new javax.swing.JLabel();
+        btnCancelar = new javax.swing.JButton();
+        btnOK = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         tituloJanela.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         tituloJanela.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -61,6 +75,11 @@ public class NovaRetirada extends javax.swing.JFrame {
         painelCliente.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Cliente", javax.swing.border.TitledBorder.LEADING, javax.swing.border.TitledBorder.TOP));
 
         btnSelecionarCliente.setText("Selecionar");
+        btnSelecionarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selecionarCliente(evt);
+            }
+        });
 
         labelClienteContainer.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
 
@@ -104,20 +123,16 @@ public class NovaRetirada extends javax.swing.JFrame {
 
         tabelaLivrosContainer.setBorder(null);
 
-        tabelaLivros.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
+        tabelaLivros.setModel(ltm);
         tabelaLivrosContainer.setViewportView(tabelaLivros);
 
-        btnSelecionarLivros.setText("jButton1");
+        btnSelecionarLivros.setText("Selecionar");
+        btnSelecionarLivros.setEnabled(false);
+        btnSelecionarLivros.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selecionarLivros(evt);
+            }
+        });
 
         javax.swing.GroupLayout painelLivrosControlesLayout = new javax.swing.GroupLayout(painelLivrosControles);
         painelLivrosControles.setLayout(painelLivrosControlesLayout);
@@ -158,25 +173,33 @@ public class NovaRetirada extends javax.swing.JFrame {
         labelTxtDataRetirada.setText("Data de Retirada:");
 
         labelDataRetirada.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        labelDataRetirada.setText(" ");
+        labelDataRetirada.setText(LocalDate.now().format(dtf));
 
         labelTxtDevPrev.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         labelTxtDevPrev.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         labelTxtDevPrev.setText("Devolução Prevista: ");
 
         labelDevPrev.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        labelDevPrev.setText(" ");
+        labelDevPrev.setText(dataPrevistaDevolucao.format(dtf));
+
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fecharJanela(evt);
+            }
+        });
+
+        btnOK.setText("OK");
+        btnOK.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                confirmarRetirada(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(painelLivros, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(painelCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -192,6 +215,17 @@ public class NovaRetirada extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(tituloJanela)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(painelLivros, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(painelCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnOK)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnCancelar)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -208,48 +242,81 @@ public class NovaRetirada extends javax.swing.JFrame {
                 .addComponent(painelCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(painelLivros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(50, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCancelar)
+                    .addComponent(btnOK))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(NovaRetirada.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(NovaRetirada.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(NovaRetirada.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(NovaRetirada.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new NovaRetirada().setVisible(true);
-            }
+    private void selecionarCliente(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selecionarCliente
+        java.awt.EventQueue.invokeLater(() -> {
+            new MovSelecionaCliente(this).setVisible(true);
         });
+    }//GEN-LAST:event_selecionarCliente
+
+    private void selecionarLivros(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selecionarLivros
+        java.awt.EventQueue.invokeLater(() -> {
+            new MovSelecionaLivros(this, nroEmprestimosRestantes).setVisible(true);
+        });
+    }//GEN-LAST:event_selecionarLivros
+
+    private void confirmarRetirada(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmarRetirada
+
+        MovimentacaoDAODB movDB = new MovimentacaoDAODB();
+        ArrayList<MovLivro> movLivros = new ArrayList<>();
+
+        for (int i = 0; i <= ltm.getRowCount() - 1; i++) {
+            movLivros.add(new MovLivro(ltm.getLivro(i)));
+        }
+
+        int idNovaMov = movDB.inserir(new Movimentacao(cliente, movLivros));
+
+        if (idNovaMov > 0) {
+            MSG.show(this, "Movimentação registrada com sucesso! ID: " + idNovaMov);
+            parent.atualizarDados();
+            this.dispose();
+        } else {
+            MSG.show(this, "Falha no registro da Movimentação.");
+        }
+
+    }//GEN-LAST:event_confirmarRetirada
+
+    private void fecharJanela(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fecharJanela
+        this.dispose();
+    }//GEN-LAST:event_fecharJanela
+
+    public void receberCliente(Cliente cliente, int nroEmprestimosRestantes) {
+        this.cliente = cliente;
+        this.nroEmprestimosRestantes = nroEmprestimosRestantes;
+        labelCliente.setText(cliente.getId() + " - " + cliente.getNome() + " (" + nroEmprestimosRestantes + " empréstimos restantes)");
+        btnSelecionarLivros.setEnabled(true);
+
+        if (ltm.getRowCount() > 0 && nroEmprestimosRestantes > ltm.getRowCount()) {
+
+            MSG.show(this, "Número de livros selecionado é maior do que"
+                    + " o permitido para este cliente: " + nroEmprestimosRestantes + "\n"
+                    + "Por favor, selecione os livros novamente.");
+
+            if (btnOK.isEnabled()) {
+                btnOK.setEnabled(false);
+            }
+
+        }
+
+    }
+
+    public void receberLivros(ArrayList<Livro> livros) {
+        ltm.setDados(livros);
+        btnOK.setEnabled(true);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnOK;
     private javax.swing.JButton btnSelecionarCliente;
     private javax.swing.JButton btnSelecionarLivros;
     private javax.swing.JLabel labelCliente;
